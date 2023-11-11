@@ -1,0 +1,4 @@
+.idea
+venv/
+backend/resource/file/
+client/node_modules
