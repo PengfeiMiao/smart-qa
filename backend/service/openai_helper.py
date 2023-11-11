@@ -19,7 +19,8 @@ class OpenAIHelper:
             # sys.exit(1)
 
     def completions(self, message, prompt='You are a helpful assistant.'):
-        stream = self.client.chat.completions.create(
+        try:
+            stream = self.client.chat.completions.create(
                 model=self.model,
                 messages=[
                     {"role": "system", "content": prompt},
@@ -27,7 +28,10 @@ class OpenAIHelper:
                 ],
                 temperature=0,
                 stream=True,
-        )
-        for event in stream:
-            if event.choices[0].delta.content:
-                yield event.choices[0].delta.content
+            )
+            for event in stream:
+                if event.choices[0].delta.content:
+                    yield event.choices[0].delta.content
+        except Exception as e:
+            logging.error(f"Failed to Connect OpenAI: {e}")
+            yield f"Service is unavailable"

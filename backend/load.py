@@ -21,10 +21,10 @@ openAIHelper = OpenAIHelper()
 
 
 if __name__ == "__main__":
-    file_path = 'resource/file/examtopics-10.pdf'
+    file_path = 'resource/file/examtopics-all.pdf'
     questions = pdfHelper.load_file(file_path)
     # # pgHelper.execute_sql('resource/db/schema.sql')
-    # pgHelper.clear('questions')
+    pgHelper.clear('questions')
     for item in questions:
         print(item.to_dict())
         pgHelper.save('questions', item.to_dict())

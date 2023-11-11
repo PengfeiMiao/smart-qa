@@ -19,6 +19,8 @@ async def root():
 
 @app.get("/saa")
 async def get_saa(page: Optional[int] = 1, size: Optional[int] = 10):
+    if page < 1:
+        page = 1
     table = 'questions'
     total = pgHelper.count(table)
     rows = pgHelper.get_all(table, page, size)
@@ -26,10 +28,10 @@ async def get_saa(page: Optional[int] = 1, size: Optional[int] = 10):
 
 
 @app.get("/saa/{id}")
-async def analyze_saa(id: int):
+async def analyze_saa(id: int) -> StreamingResponse:
     table = 'questions'
     row = pgHelper.get(table, id)
-    prompt = '请结合 AWS 相关知识以及候选答案，帮我翻译并简要分析题干和各个选项，给出正确答案'
+    prompt = '请结合 AWS 相关知识以及推荐答案，使用中文帮我简要分析题干和各个选项，给出正确答案'
     message = Question.parse(row).to_string()
 
-    return StreamingResponse(openai.completions(message, prompt), media_type="text/plain")
+    return StreamingResponse(openai.completions(message, prompt), media_type="text/event-stream")

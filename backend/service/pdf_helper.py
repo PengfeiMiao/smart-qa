@@ -30,7 +30,7 @@ class PDFHelper:
             print(f'总页数: {len(pdf.pages)}')
             # 遍历每一页并提取文本内容
             for page_num, page in zip(range(len(pdf.pages)), pdf.pages):
-                text = page.extract_text().replace('\x00', '-')
+                text = page.extract_text().replace('\x00', 'fi-')
                 print('page_num:', page_num)
                 qoa_list = self.question_regex[0].findall(text)
                 for qoa in qoa_list:

@@ -17,9 +17,10 @@ class Question:
     def to_string(self):
         options = '\n'.join(self.options)
         vote_answer = self.vote.split(' ')[0]
+        alter_answers = self.answer if self.answer == vote_answer else f"{self.answer} or {vote_answer}"
         return f"Question: {self.question}\n" \
                f"{options}\n" \
-               f"Candidate Answer: {self.answer} or {vote_answer}\n"
+               f"Recommended answer: {alter_answers}\n"
 
     @staticmethod
     def parse(row):
