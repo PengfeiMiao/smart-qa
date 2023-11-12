@@ -69,7 +69,6 @@ class PgDBHelper:
         except psycopg2.Error as e:
             print(f"Error updating data: {e}")
 
-
     def delete(self, table, data_id):
         try:
             query = f"DELETE FROM {table} WHERE id = %s"
@@ -79,11 +78,21 @@ class PgDBHelper:
         except psycopg2.Error as e:
             print(f"Error deleting data: {e}")
 
-    def get_all(self, table, page=1, page_size=10):
+    def get_all(self, table, page=1, page_size=10, filters: dict = None):
         try:
             offset = (page - 1) * page_size
-            query = f"SELECT * FROM {table} ORDER BY id LIMIT %s OFFSET %s"
-            self.cur.execute(query, (page_size, offset))
+            query = f"SELECT * FROM {table}"
+            params = []
+            if filters:
+                conditions = []
+                for key, value in filters.items():
+                    conditions.append(f"{key} = %s")
+                    params.append(value)
+                query += " WHERE " + " AND ".join(conditions)
+            query += " ORDER BY id LIMIT %s OFFSET %s"
+
+            params.extend([page_size, offset])
+            self.cur.execute(query, params)
             rows = self.cur.fetchall()
             for row in rows:
                 print(row)
@@ -91,10 +100,17 @@ class PgDBHelper:
         except psycopg2.Error as e:
             print(f"Error retrieving data: {e}")
 
-    def count(self, table):
+    def count(self, table, filters: dict = None):
         try:
             query = f"SELECT COUNT(*) FROM {table}"
-            self.cur.execute(query)
+            params = []
+            if filters:
+                conditions = []
+                for key, value in filters.items():
+                    conditions.append(f"{key} = %s")
+                    params.append(value)
+                query += " WHERE " + " AND ".join(conditions)
+            self.cur.execute(query, params)
             count = self.cur.fetchone()[0]
             return count
         except psycopg2.Error as e:

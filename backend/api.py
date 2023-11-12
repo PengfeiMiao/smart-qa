@@ -21,32 +21,24 @@ async def root():
     return {"message": "Hello World"}
 
 
-@app.get("/saa")
-async def get_saa(page: Optional[int] = 1, size: Optional[int] = 10):
+@app.get("/datasets/{dataset_id}/questions")
+async def get_questions(dataset_id: int, page: Optional[int] = 1, size: Optional[int] = 10):
     if page < 1:
         page = 1
     table = 'questions'
-    total = pgHelper.count(table)
-    rows = pgHelper.get_all(table, page, size)
+    filters = {'dataset_id': dataset_id}
+    total = pgHelper.count(table, filters)
+    rows = pgHelper.get_all(table, page, size, filters)
     return Page([Question.parse(row) for row in rows], total, page, size)
 
 
-@app.get("/saa/{id}")
-async def analyze_saa(id: int) -> StreamingResponse:
-    table = 'questions'
-    row = pgHelper.get(table, id)
-    prompt = """
-    请结合 AWS 相关知识，完成以下步骤：
-    1. 中文翻译题目；
-    2. 中文翻译每一个选项并简要分析每个选项是否为最佳答案，
-    【ex. 分析：\nA. 使用 某 AWS 服务A解决。因为,,,所以不是最佳答案；\nB. 使用 某 AWS 服务B解决。因为,,,所以是最佳答案】
-    3. 根据可能的答案选出唯一的最佳答案。
-    【ex. 最佳答案：X】
-    4. 最后提取 2 到 4 个关键字，
-    【ex. 关键字：S3、RDS、安全性、可扩展性、弹性、最小运营、最小成本】；
-    """
+@app.get("/datasets/{dataset_id}/questions/{id}")
+async def analyze_question(dataset_id:int, id: int) -> StreamingResponse:
+    config = pgHelper.get('datasets', dataset_id)
+    prompts = Dataset.parse(config).prompts
+    row = pgHelper.get('questions', id)
     message = Question.parse(row).to_string()
-    return StreamingResponse(openai.completions(message, prompt), media_type="text/event-stream")
+    return StreamingResponse(openai.completions(message, prompts), media_type="text/event-stream")
 
 
 @app.get("/datasets")

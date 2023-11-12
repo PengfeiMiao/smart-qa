@@ -4,20 +4,24 @@ import {getDatasets} from "../api/api";
 export const GlobalContext = React.createContext({});
 
 const GlobalProvider = ({ children }) => {
-	const [datesetList, setDatesetList] = useState(false);
+	const [datasetList, setDatasetList] = useState([]);
+
+	const getDatasetList = async () => {
+		let data = await getDatasets(1, 999);
+		let body = await data.json();
+		setDatasetList(body.data);
+	};
 
 	useEffect(() => {
-		getDatasets(1, 999).then(async res => {
-			let body = await res.json();
-			setDatesetList(body);
-		});
+		getDatasetList().then();
 	}, []);
 
 	return (
 		<GlobalContext.Provider
 			value={{
-				datesetList,
-				setDatesetList,
+				datasetList,
+				setDatasetList,
+				getDatasetList,
 			}}
 		>
 			{children}

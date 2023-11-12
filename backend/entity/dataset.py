@@ -21,7 +21,7 @@ class Dataset:
         return Dataset(
             row[1],
             row[2],
-            eval(row[3]),
+            json.loads(row[3]),
             json.loads(row[4]),
             row[5],
             row[6],

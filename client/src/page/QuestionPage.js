@@ -15,15 +15,15 @@ import {getQuestions} from "../api/api";
 import './index.css'
 import Analysis from "../component/Analysis";
 import {useParams} from "react-router-dom";
+import LabelValue from "../component/LabelValue";
 
 const QuestionPage = () => {
-  const { page } = useParams(); // 获取当前页码
+  const { page } = useParams();
   const [questionList, setQuestionList] = useState([]);
   const [currentPage, setCurrentPage] = useState(parseInt(page, 10) || 1);
   const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
-    console.log('currentPage', currentPage)
     getQuestions(currentPage).then(async res => {
       const body = await res.json();
       setQuestionList(body.data);
@@ -51,7 +51,7 @@ const QuestionPage = () => {
             <List mt={2} paddingX={2}>
               {Object.entries(question.options).map(([key, value]) => (
                 <ListItem key={key}>
-                  <Text><strong>{key}</strong>. {value}</Text>
+                  <LabelValue label={`${key}.`} value={value} labelStyle={{marginRight: '10px'}}></LabelValue>
                 </ListItem>
               ))}
             </List>
@@ -66,8 +66,8 @@ const QuestionPage = () => {
                   </AccordionButton>
                 </h2>
                 <AccordionPanel pb={2}>
-                  <Text mb={2}><strong>Answer</strong>: {question.answer}</Text>
-                  <Text mb={2}><strong>Vote</strong>: {question.vote}</Text>
+                  <LabelValue label={'Answer:'} value={question.answer} labelStyle={{width: '80px'}}></LabelValue>
+                  <LabelValue label={'Vote:'} value={question.vote} labelStyle={{width: '80px'}}></LabelValue>
                 </AccordionPanel>
               </AccordionItem>
             </Accordion>

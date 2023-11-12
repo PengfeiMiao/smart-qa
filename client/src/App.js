@@ -1,7 +1,7 @@
 import './App.css';
 import React from 'react';
-import {ChakraProvider, Tab, TabList, TabPanel, TabPanels, Tabs} from '@chakra-ui/react';
-import {BrowserRouter as Router, Route, Routes, Link, Navigate, useLocation} from 'react-router-dom';
+import {Alert, AlertIcon, Box, ChakraProvider, Tab, TabList, Tabs} from '@chakra-ui/react';
+import {BrowserRouter as Router, Link, Navigate, Route, Routes} from 'react-router-dom';
 import QuestionPage from "./page/QuestionPage";
 import ManagerPage from "./page/ManagerPage";
 import GlobalProvider from "./store/GlobalProvider";
@@ -25,18 +25,20 @@ function App() {
           <Tabs defaultIndex={getActiveTabIndex()}>
             <TabList className={"tab-headers"}>
               <Link to={'/questions/view/1'}>
-                <Tab className={"tab-header"}>题库管理</Tab>
+                <Tab className={"tab-header"}>Question Bank</Tab>
               </Link>
               <Link to={'/managers'}>
-                <Tab className={"tab-header"}>题库管理</Tab>
+                <Tab className={"tab-header"}>Management</Tab>
               </Link>
-              <Tab className={"tab-header"}>我的收藏</Tab>
+              {/*<Tab className={"tab-header"}>My Stars</Tab>*/}
             </TabList>
-            <Routes>
-              <Route exact path='/' element={<Navigate to="/questions/view/1" />}/>
-              <Route exact path="/questions/view/:page" element={<QuestionPage />} />
-              <Route exact path='/managers' element={<ManagerPage />}/>
-            </Routes>
+            <Box mt={12}>
+              <Routes>
+                <Route exact path='/' element={<Navigate to="/questions/view/1" />} />
+                <Route exact path="/questions/view/:page" element={<QuestionPage />} />
+                <Route exact path='/managers' element={<ManagerPage />}/>
+              </Routes>
+            </Box>
           </Tabs>
         </Router>
       </ChakraProvider>

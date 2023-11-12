@@ -1,4 +1,5 @@
 import logging
+import re
 
 from openai import OpenAI, AsyncOpenAI
 
@@ -18,14 +19,16 @@ class OpenAIHelper:
             logging.error(f"Failed to Connect OpenAI: {e}")
             # sys.exit(1)
 
-    def completions(self, message, prompt='You are a helpful assistant.'):
+    def completions(self, message, prompts=None):
+        if prompts is None:
+            prompts = [{"role": "user", "content": message}]
+        else:
+            for prompt in prompts:
+                prompt['content'] = re.sub(r"{question.*?}", message, prompt['content'])
         try:
             stream = self.client.chat.completions.create(
                 model=self.model,
-                messages=[
-                    {"role": "user", "content": message},
-                    {"role": "system", "content": prompt},
-                ],
+                messages=prompts,
                 temperature=0,
                 stream=True,
             )
