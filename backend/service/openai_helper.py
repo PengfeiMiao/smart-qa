@@ -23,8 +23,8 @@ class OpenAIHelper:
             stream = self.client.chat.completions.create(
                 model=self.model,
                 messages=[
-                    {"role": "system", "content": prompt},
                     {"role": "user", "content": message},
+                    {"role": "system", "content": prompt},
                 ],
                 temperature=0,
                 stream=True,

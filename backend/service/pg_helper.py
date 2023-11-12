@@ -53,6 +53,23 @@ class PgDBHelper:
         except psycopg2.Error as e:
             print(f"Error saving data: {e}")
 
+    def update(self, table, data):
+        try:
+            id = data['id']
+            update_query = f"UPDATE {table} SET "
+            update_parts = []
+            for column, value in data.items():
+                if column != 'id':
+                    update_parts.append(f"{column} = '{value}'")
+            update_query += ", ".join(update_parts)
+            update_query += f" WHERE id = {id}"
+            self.cur.execute(update_query)
+            self.conn.commit()
+            print("Data updated successfully.")
+        except psycopg2.Error as e:
+            print(f"Error updating data: {e}")
+
+
     def delete(self, table, data_id):
         try:
             query = f"DELETE FROM {table} WHERE id = %s"

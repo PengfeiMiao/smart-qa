@@ -2,12 +2,12 @@ import React from 'react';
 import { Box, Button } from '@chakra-ui/react';
 import {useNavigate} from "react-router-dom";
 
-function Pagination({ currentPage, totalPages, onPageChange }) {
+function Pagination({ currentPage, totalPages, onPageChange, root }) {
   const navigate = useNavigate();
 
   const handlePathChange = (page) => {
-    const newPath = `/questions/view/${page}`;
-    navigate(newPath);
+    const newPath = `${root}/view/${page}`;
+    navigate(newPath, {replace: true});
   };
 
   const handlePreviousPage = () => {

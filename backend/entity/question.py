@@ -1,26 +1,27 @@
 import json
 
+from backend.util.mapper import to_dict
+
 
 class Question:
-    def __init__(self, question: str, options: dict, answer: str, vote: str, id=None):
+    def __init__(self, question: str, options: dict, answer: str, vote: str, dataset_id: int, id=None):
         self.id = id
         self.question = question
         self.options = options
         self.answer = answer
         self.vote = vote
+        self.dataset_id = dataset_id
 
     def to_dict(self):
-        obj_dict = vars(self)
-        obj_dict.pop('id', None)
-        return obj_dict
+        return to_dict(self)
 
     def to_string(self):
-        options = '\n'.join(self.options)
+        options = '\n'.join([f"{key}. {self.options[key]}" for key in self.options])
         vote_answer = self.vote.split(' ')[0]
         alter_answers = self.answer if self.answer == vote_answer else f"{self.answer} or {vote_answer}"
         return f"Question: {self.question}\n" \
                f"{options}\n" \
-               f"Recommended answer: {alter_answers}\n"
+               f"Possible answers: {alter_answers}\n"
 
     @staticmethod
     def parse(row):
@@ -29,5 +30,6 @@ class Question:
             json.loads(row[2]),
             row[3],
             row[4],
+            row[5],
             row[0]
         )

@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Box, Button, Spinner, Text} from '@chakra-ui/react';
-import { analyzeQuestion } from "../api/question";
+import { analyzeQuestion } from "../api/api";
 import {CheckIcon, RepeatIcon} from '@chakra-ui/icons'
 
 const Analysis = ({ questionId }) => {

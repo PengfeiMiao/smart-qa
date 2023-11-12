@@ -11,29 +11,29 @@ import {
   AccordionIcon, AccordionPanel
 } from '@chakra-ui/react';
 import Pagination from '../component/Pagination';
-import {getQuestions} from "../api/question";
+import {getQuestions} from "../api/api";
 import './index.css'
 import Analysis from "../component/Analysis";
 import {useParams} from "react-router-dom";
 
-function QuestionPage() {
+const QuestionPage = () => {
   const { page } = useParams(); // 获取当前页码
   const [questionList, setQuestionList] = useState([]);
   const [currentPage, setCurrentPage] = useState(parseInt(page, 10) || 1);
   const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
+    console.log('currentPage', currentPage)
     getQuestions(currentPage).then(async res => {
       const body = await res.json();
       setQuestionList(body.data);
       setTotalPages(Math.ceil(body.total / body.size));
     })
   }, [currentPage]);
+
   const handlePageChange = (page) => {
     setCurrentPage(page);
-
   };
-
 
   return (
     <Box>
@@ -81,6 +81,7 @@ function QuestionPage() {
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={handlePageChange}
+          root={'/questions'}
         />
       </Box>
     </Box>
