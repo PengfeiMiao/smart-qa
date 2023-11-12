@@ -53,7 +53,7 @@ const ManagerPage = () => {
     <Box>
       <Text fontSize="xl" fontWeight="bold" ml={8}>Manager List</Text>
       <Accordion defaultIndex={[0]} allowMultiple mt={4} marginX={8}>
-        {datasetList.map((dataset) => (
+        {datasetList?.map((dataset) => (
           <AccordionItem key={dataset.id}>
             <h2>
               <AccordionButton pl={2}>

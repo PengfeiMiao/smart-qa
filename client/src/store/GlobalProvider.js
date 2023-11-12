@@ -7,9 +7,8 @@ const GlobalProvider = ({ children }) => {
 	const [datasetList, setDatasetList] = useState([]);
 
 	const getDatasetList = async () => {
-		let data = await getDatasets(1, 999);
-		let body = await data.json();
-		setDatasetList(body.data);
+		let body = await getDatasets(1, 999);
+		setDatasetList(body?.data);
 	};
 
 	useEffect(() => {

@@ -55,12 +55,12 @@ const PromptEditor = ({label, value, id}) => {
 
   return (
     <Box>
-      <Alert position="fixed" w={"20vw"} left={"40vw"} top={0} zIndex={1000} borderRadius={5}
+      <Alert position="fixed" w={"20vw"} minW={"200px"} left={"40vw"} top={0} zIndex={1000} borderRadius={5}
              status={updateStatus === 1 ? 'success' : 'error'} hidden={alertHidden}>
         <AlertIcon/>
         {alertMsg[updateStatus - 1]}
       </Alert>
-      <Text fontWeight="bold" w={100} mb={1}>
+      <Text fontWeight="bold" w={100} mb={1}>s
         {label}
       </Text>
       {isEditing ? (
