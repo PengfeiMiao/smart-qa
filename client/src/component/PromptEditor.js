@@ -60,7 +60,7 @@ const PromptEditor = ({label, value, id}) => {
         <AlertIcon/>
         {alertMsg[updateStatus - 1]}
       </Alert>
-      <Text fontWeight="bold" w={100} mb={1}>s
+      <Text fontWeight="bold" w={100} mb={1}>
         {label}
       </Text>
       {isEditing ? (

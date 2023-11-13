@@ -8,6 +8,14 @@ function Pagination({ currentPage, totalPages, onPageChange, root }) {
   const handlePathChange = (page) => {
     const newPath = `${root}/view/${page}`;
     navigate(newPath, {replace: true});
+    scrollToTop();
+  };
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
   };
 
   const handlePreviousPage = () => {
