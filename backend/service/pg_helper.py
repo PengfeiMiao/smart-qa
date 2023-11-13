@@ -1,13 +1,14 @@
 import json
 
 import psycopg2
-from ..config.config import DB_HOST, DB_SCHEMA, DB_USER, DB_PWD
+from ..config.config import DB_HOST, DB_PORT, DB_SCHEMA, DB_USER, DB_PWD
 
 
 class PgDBHelper:
     def __init__(self):
         self.conn = psycopg2.connect(
             host=DB_HOST,
+            port=DB_PORT,
             database=DB_SCHEMA,
             user=DB_USER,
             password=DB_PWD
