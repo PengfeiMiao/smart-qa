@@ -15,7 +15,8 @@ CREATE TABLE IF NOT EXISTS questions (
     options TEXT,
     answer VARCHAR(20),
     vote VARCHAR(255),
-    dataset_id INTEGER NOT NULL
+    dataset_id INTEGER NOT NULL,
+    analysis TEXT
 );
 
 -- default data

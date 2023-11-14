@@ -23,6 +23,16 @@ export const updateDataset = async (datasetId, payload) => {
   });
 };
 
+export const updateQuestion = async (datasetId, questionId, payload) => {
+  return await fetchApi(`${BASE_URL}/datasets/${datasetId}/questions/${questionId}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(payload)
+  });
+};
+
 function fetchApi(url, options) {
   return fetch(url, options)
     .then(response => {

@@ -74,7 +74,7 @@ const QuestionPage = () => {
                   </AccordionPanel>
                 </AccordionItem>
               </Accordion>
-              <Analysis questionId={question.id}></Analysis>
+              <Analysis question={question}></Analysis>
             </Box>
           </Box>
         ))}

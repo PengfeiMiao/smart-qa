@@ -4,13 +4,14 @@ from backend.util.mapper import to_dict
 
 
 class Question:
-    def __init__(self, question: str, options: dict, answer: str, vote: str, dataset_id: int, id=None):
+    def __init__(self, question: str, options: dict, answer: str, vote: str, dataset_id: int, analysis: str, id=None):
         self.id = id
         self.question = question
         self.options = options
         self.answer = answer
         self.vote = vote
         self.dataset_id = dataset_id
+        self.analysis = analysis
 
     def to_dict(self):
         return to_dict(self)
@@ -31,5 +32,6 @@ class Question:
             row[3],
             row[4],
             row[5],
+            row[6],
             row[0]
         )

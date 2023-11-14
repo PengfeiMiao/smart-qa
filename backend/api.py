@@ -7,6 +7,7 @@ from backend.entity.dataset import Dataset
 from backend.entity.page import Page
 from backend.entity.question import Question
 from backend.model.dataset_model import DatasetModel
+from backend.model.question_model import QuestionModel
 from backend.service.openai_helper import OpenAIHelper
 from backend.service.pg_helper import PgDBHelper
 from backend.util.mapper import clear_dict
@@ -33,12 +34,22 @@ async def get_questions(dataset_id: int, page: Optional[int] = 1, size: Optional
 
 
 @app.get("/datasets/{dataset_id}/questions/{id}")
-async def analyze_question(dataset_id:int, id: int) -> StreamingResponse:
+async def analyze_question(dataset_id: int, id: int) -> StreamingResponse:
     config = pgHelper.get('datasets', dataset_id)
     prompts = Dataset.parse(config).prompts
     row = pgHelper.get('questions', id)
     message = Question.parse(row).to_string()
     return StreamingResponse(openai.completions(message, prompts), media_type="text/event-stream")
+
+
+@app.patch("/datasets/{dataset_id}/questions/{id}")
+async def update_question(dataset_id: int, id: int, data: QuestionModel):
+    table = 'questions'
+    data_dict = jsonable_encoder(data)
+    data_dict['id'] = id
+    data_dict['dataset_id'] = dataset_id
+    pgHelper.update(table, clear_dict(data_dict))
+    return Question.parse(pgHelper.get(table, id))
 
 
 @app.get("/datasets")

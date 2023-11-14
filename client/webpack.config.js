@@ -21,7 +21,7 @@ module.exports = {
       directory: path.resolve(__dirname, 'public'),
     },
     hot: true,
-    port: 3000,
+    port: 3001,
     proxy: {
       '/api': {
         target: 'http://localhost:8000',
