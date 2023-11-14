@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Box, Button, Spinner, Text} from '@chakra-ui/react';
 import {analyzeQuestion, updateQuestion} from "../api/api";
 import {CheckIcon, PlusSquareIcon, RepeatIcon} from '@chakra-ui/icons'
-import {getHash, setHash} from "../store/CookieHash";
+import {getHash, removeHash, setHash} from "../store/CacheStore";
 
 const Analysis = ({ question }) => {
   const [analysis, setAnalysis] = useState(question.analysis ?? '');
@@ -63,6 +63,7 @@ const Analysis = ({ question }) => {
   const  handleUpload = async () => {
     setUploading(true);
     await updateQuestion(1, question.id, { id: question.id, analysis });
+    removeHash('analysis', question.id);
     setTimeout(() => setUploading(false), 300);
   };
 
