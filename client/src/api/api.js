@@ -1,12 +1,12 @@
 const BASE_URL = 'http://localhost:8000';
 // const BASE_URL = '/api';
 
-export const getQuestions = async (currentPage) => {
-  return await fetchApi(`${BASE_URL}/datasets/1/questions?page=${currentPage}`);
+export const getQuestions = async (datasetId, currentPage) => {
+  return await fetchApi(`${BASE_URL}/datasets/${datasetId}/questions?page=${currentPage}`);
 };
 
-export const analyzeQuestion = async (questionId) => {
-  return await fetch(`${BASE_URL}/datasets/1/questions/${questionId}`);
+export const analyzeQuestion = async (datasetId, questionId) => {
+  return await fetch(`${BASE_URL}/datasets/${datasetId}/questions/${questionId}`);
 };
 
 export const getDatasets = async (currentPage, pageSize) => {

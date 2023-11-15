@@ -19,7 +19,7 @@ const Analysis = ({ question }) => {
 
   function handleAnalysisStream() {
     setLoading(true);
-    analyzeQuestion(question.id)
+    analyzeQuestion(question.dataset_id, question.id)
       .then(response => {
         const reader = response.body.getReader();
         const decoder = new TextDecoder();
