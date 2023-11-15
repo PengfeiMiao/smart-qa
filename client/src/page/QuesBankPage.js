@@ -48,11 +48,10 @@ const QuesBankPage = () => {
       <QuestionList questions={questionList}></QuestionList>
       <Box className={"pagination-container"}>
         <Pagination
-          datasetId={datasetId}
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={handlePageChange}
-          root={'/questions'}
+          onRoute={(page) => `/question-bank/${datasetId}/view/${page}`}
         />
       </Box>
     </Box>

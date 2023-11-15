@@ -11,7 +11,7 @@ function App() {
 
   const getActiveTabIndex = () => {
     const path = window.location.pathname;
-    if (path.startsWith('/questions/view')) {
+    if (path.startsWith('/question-bank')) {
       return 0;
     } else if (path.startsWith('/managers')) {
       return 1;
@@ -25,19 +25,19 @@ function App() {
       <Router>
         <Tabs defaultIndex={getActiveTabIndex()}>
           <TabList className={"tab-headers"}>
-            <Link to={`/questions/view/${currentPosition.datasetId}/${currentPosition.page}`}>
+            <Link to={`/question-bank/${currentPosition.datasetId}/view/${currentPosition.page}`}>
               <Tab className={"tab-header"}>Question Bank</Tab>
             </Link>
-            <Link to={'/managers'}>
+            <Link to={'/management'}>
               <Tab className={"tab-header"}>Management</Tab>
             </Link>
             {/*<Tab className={"tab-header"}>My Stars</Tab>*/}
           </TabList>
           <Box mt={12}>
             <Routes>
-              <Route exact path='/' element={<Navigate to="/questions/view/1/1"/>}/>
-              <Route exact path="/questions/view/:dataset/:page" element={<QuesBankPage/>}/>
-              <Route exact path='/managers' element={<ManagerPage/>}/>
+              <Route exact path='/' element={<Navigate to="/question-bank/1/view/1"/>}/>
+              <Route exact path="/question-bank/:dataset/view/:page" element={<QuesBankPage/>}/>
+              <Route exact path='/management' element={<ManagerPage/>}/>
             </Routes>
           </Box>
         </Tabs>
