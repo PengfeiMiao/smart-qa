@@ -2,16 +2,17 @@ import React, {useEffect, useState} from 'react';
 import {Box, Button, Spinner, Text} from '@chakra-ui/react';
 import {analyzeQuestion, updateQuestion} from "../api/api";
 import {CheckIcon, PlusSquareIcon, RepeatIcon} from '@chakra-ui/icons'
-import {getHash, removeHash, setHash} from "../store/CacheStore";
+import {getHash, refreshHash, removeHash, setHash} from "../store/CacheStore";
 
 const Analysis = ({ question }) => {
   const [analysis, setAnalysis] = useState(question.analysis ?? '');
   const [hidden, setHidden] = useState(true);
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const cacheKey = 'analysis';
 
   useEffect(() => {
-    let hash = getHash('analysis', question.id);
+    let hash = getHash(cacheKey, question.id);
     if(!analysis && hash) {
       setAnalysis(hash);
     }
@@ -29,7 +30,7 @@ const Analysis = ({ question }) => {
           reader.read().then(({done, value}) => {
             if (done) {
               setLoading(false);
-              setHash('analysis', question.id, dataChunks.join(''));
+              setHash(cacheKey, question.id, dataChunks.join(''));
               return;
             }
             const chunk = decoder.decode(value, {stream: true});
@@ -51,6 +52,8 @@ const Analysis = ({ question }) => {
     setHidden(!hidden);
     if(!loading && !analysis) {
       handleAnalysisStream();
+    } else {
+      refreshHash(cacheKey, question.id);
     }
   };
 
@@ -62,7 +65,7 @@ const Analysis = ({ question }) => {
   const  handleUpload = async () => {
     setUploading(true);
     await updateQuestion(1, question.id, { id: question.id, analysis });
-    removeHash('analysis', question.id);
+    removeHash(cacheKey, question.id);
     setTimeout(() => setUploading(false), 300);
   };
 

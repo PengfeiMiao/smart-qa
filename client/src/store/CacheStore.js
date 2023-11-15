@@ -8,9 +8,9 @@ export const getHash = (key, field) => {
   let json = getJson(key);
   let expiresAt = json[field]?.expiresAt;
   if (!expiresAt || expiresAt < moment().valueOf()) {
+    removeHash(key, field);
     return null;
   }
-  setHash(key, field, json[field]?.value);
   return json[field]?.value;
 };
 
@@ -24,4 +24,18 @@ export const removeHash = (key, field) => {
   let json = getJson(key);
   delete json[field];
   localStorage.setItem(key, JSON.stringify(json));
+};
+
+export const refreshHash = (key, field) => {
+  let json = getJson(key);
+  for (let _field in json) {
+    let expiresAt = json[_field]?.expiresAt;
+    if (_field !== field && (!expiresAt || expiresAt < moment().valueOf())) {
+      removeHash(key, _field)
+    }
+  }
+  let value = getHash(key, field);
+  if(value) {
+    setHash(key, field, value);
+  }
 };
