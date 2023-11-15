@@ -5,6 +5,7 @@ export const GlobalContext = React.createContext({});
 
 const GlobalProvider = ({ children }) => {
 	const [datasetList, setDatasetList] = useState([]);
+	const [currentPosition, setCurrentPosition] = useState({ datasetId: 1, page: 1 });
 
 	const getDatasetList = async () => {
 		let body = await getDatasets(1, 999);
@@ -21,6 +22,8 @@ const GlobalProvider = ({ children }) => {
 				datasetList,
 				setDatasetList,
 				getDatasetList,
+				currentPosition,
+				setCurrentPosition
 			}}
 		>
 			{children}

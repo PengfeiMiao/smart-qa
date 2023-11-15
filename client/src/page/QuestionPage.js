@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   Box,
   Text,
@@ -16,15 +16,17 @@ import './index.css'
 import Analysis from "../component/Analysis";
 import {useParams} from "react-router-dom";
 import LabelValue from "../component/LabelValue";
+import {GlobalContext} from "../store/GlobalProvider";
 
 const QuestionPage = () => {
+  const {setCurrentPosition} = useContext(GlobalContext);
   const { page } = useParams();
   const [questionList, setQuestionList] = useState([]);
   const [currentPage, setCurrentPage] = useState(parseInt(page, 10) || 1);
   const [totalPages, setTotalPages] = useState(1);
 
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
+  const handlePageChange = (pageIndex) => {
+    setCurrentPage(pageIndex);
   };
 
   const getQuestionList = async () => {
@@ -35,6 +37,7 @@ const QuestionPage = () => {
 
   useEffect(() => {
     getQuestionList().then();
+    setCurrentPosition({datasetId: 1, page: currentPage});
   }, [currentPage]);
 
   return (

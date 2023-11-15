@@ -29,7 +29,6 @@ const Analysis = ({ question }) => {
           reader.read().then(({done, value}) => {
             if (done) {
               setLoading(false);
-              console.log('analysis end', dataChunks.join(''));
               setHash('analysis', question.id, dataChunks.join(''));
               return;
             }
