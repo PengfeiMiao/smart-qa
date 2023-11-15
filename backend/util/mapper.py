@@ -1,4 +1,5 @@
 import json
+from collections import defaultdict
 
 
 def to_dict(data, ignore_id=True):
@@ -16,3 +17,10 @@ def clear_dict(data: dict):
         if isinstance(value, list):
             data[key] = json.dumps(value, ensure_ascii=False)
     return data
+
+
+def group_dict(data: list, key: str):
+    grouped_data = defaultdict(list)
+    for item in data:
+        grouped_data[getattr(item, key)].append(item)
+    return dict(grouped_data)

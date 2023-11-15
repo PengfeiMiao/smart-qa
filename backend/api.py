@@ -4,13 +4,15 @@ from fastapi.encoders import jsonable_encoder
 from typing import Optional
 
 from backend.entity.dataset import Dataset
+from backend.entity.note import Note
 from backend.entity.page import Page
 from backend.entity.question import Question
 from backend.model.dataset_model import DatasetModel
+from backend.model.note_model import NoteModel
 from backend.model.question_model import QuestionModel
 from backend.service.openai_helper import OpenAIHelper
 from backend.service.pg_helper import PgDBHelper
-from backend.util.mapper import clear_dict
+from backend.util.mapper import clear_dict, group_dict
 
 app = FastAPI()
 pgHelper = PgDBHelper()
@@ -30,7 +32,17 @@ async def get_questions(dataset_id: int, page: Optional[int] = 1, size: Optional
     filters = {'dataset_id': dataset_id}
     total = pgHelper.count(table, filters)
     rows = pgHelper.get_all(table, page, size, filters)
-    return Page([Question.parse(row) for row in rows], total, page, size)
+    # filter notes by question_ids
+    filters['question_id'] = [row[0] for row in rows]
+    sub_rows = pgHelper.get_all('notes', filters=filters)
+    note_dict = group_dict([Note.parse(sub_row) for sub_row in sub_rows], 'question_id')
+    # compose notes to questions
+    questions = []
+    for row in rows:
+        question = Question.parse(row)
+        question.with_notes(note_dict.get(row[0], []))
+        questions.append(question)
+    return Page(questions, total, page, size)
 
 
 @app.get("/datasets/{dataset_id}/questions/{id}")
@@ -69,3 +81,20 @@ async def update_dataset(id: int, data: DatasetModel):
     data_dict['id'] = id
     pgHelper.update(table, clear_dict(data_dict))
     return Dataset.parse(pgHelper.get(table, id))
+
+
+@app.post("/notes")
+async def create_note(data: NoteModel):
+    table = 'notes'
+    data_dict = jsonable_encoder(data)
+    pid = pgHelper.save(table, clear_dict(data_dict))
+    return Note.parse(pgHelper.get(table, pid))
+
+
+@app.patch("/notes/{id}")
+async def update_note(id: int, data: NoteModel):
+    table = 'notes'
+    data_dict = jsonable_encoder(data)
+    data_dict['id'] = id
+    pid = pgHelper.update(table, clear_dict(data_dict))
+    return Note.parse(pgHelper.get(table, pid))

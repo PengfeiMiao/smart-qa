@@ -47,10 +47,12 @@ class PgDBHelper:
                     data_copy[key] = json.dumps(value)
             columns = ', '.join(data_copy.keys())
             placeholders = ', '.join(['%s'] * len(data_copy))
-            query = f"INSERT INTO {table} ({columns}) VALUES ({placeholders})"
+            query = f"INSERT INTO {table} ({columns}) VALUES ({placeholders}) RETURNING id"
             self.cur.execute(query, list(data_copy.values()))
+            primary_key = self.cur.fetchone()[0]
             self.conn.commit()
             print("Data saved successfully.")
+            return primary_key
         except psycopg2.Error as e:
             print(f"Error saving data: {e}")
 
@@ -79,20 +81,27 @@ class PgDBHelper:
         except psycopg2.Error as e:
             print(f"Error deleting data: {e}")
 
-    def get_all(self, table, page=1, page_size=10, filters: dict = None):
+    def get_all(self, table, page: int = None, page_size: int = None, filters: dict = None):
         try:
-            offset = (page - 1) * page_size
             query = f"SELECT * FROM {table}"
             params = []
             if filters:
                 conditions = []
                 for key, value in filters.items():
-                    conditions.append(f"{key} = %s")
-                    params.append(value)
+                    if isinstance(value, list):
+                        conditions.append(f"{key} IN %s")
+                        params.append(tuple(value))
+                    else:
+                        conditions.append(f"{key} = %s")
+                        params.append(value)
                 query += " WHERE " + " AND ".join(conditions)
-            query += " ORDER BY id LIMIT %s OFFSET %s"
 
-            params.extend([page_size, offset])
+            query += " ORDER BY id"
+            if page and page_size:
+                offset = (page - 1) * page_size
+                params.extend([page_size, offset])
+                query += " LIMIT %s OFFSET %s"
+
             self.cur.execute(query, params)
             rows = self.cur.fetchall()
             for row in rows:
@@ -108,8 +117,12 @@ class PgDBHelper:
             if filters:
                 conditions = []
                 for key, value in filters.items():
-                    conditions.append(f"{key} = %s")
-                    params.append(value)
+                    if isinstance(value, list):
+                        conditions.append(f"{key} IN %s")
+                        params.append(tuple(value))
+                    else:
+                        conditions.append(f"{key} = %s")
+                        params.append(value)
                 query += " WHERE " + " AND ".join(conditions)
             self.cur.execute(query, params)
             count = self.cur.fetchone()[0]

@@ -12,6 +12,10 @@ class Question:
         self.vote = vote
         self.dataset_id = dataset_id
         self.analysis = analysis
+        self.notes = []
+
+    def with_notes(self, notes: list):
+        self.notes = notes
 
     def to_dict(self):
         return to_dict(self)
