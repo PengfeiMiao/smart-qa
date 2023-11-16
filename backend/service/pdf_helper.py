@@ -38,7 +38,7 @@ class PDFHelper:
                     options = {}
                     for option in option_list:
                         options[option[0]] = option[1].replace('\n', ' ')
-                    question = Question(qoa[1].replace('\n', ' '), options, qoa[3], qoa[4], 1)
+                    question = Question(qoa[1].replace('\n', ' '), options, qoa[3], qoa[4], 1, '', 1)
                     index += 1
                     # print('index', index, '\nquestion', question.to_dict())
                     questions.append(question)

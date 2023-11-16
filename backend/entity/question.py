@@ -18,7 +18,9 @@ class Question:
         self.notes = notes
 
     def to_dict(self):
-        return to_dict(self)
+        _dict = to_dict(self)
+        _dict.pop('notes', None)
+        return _dict
 
     def to_string(self):
         options = '\n'.join([f"{key}. {self.options[key]}" for key in self.options])
