@@ -9,17 +9,27 @@ const LoginPage = () => {
 
   const handleLogin = async () => {
     let body = await loginApi({password});
-    if (body?.status) {
+    if (body?.status === 200) {
       setCookie('token', password);
       window.location.assign('/');
+    } else {
+      setCookie('token', '');
+      alert('Password is incorrect!');
     }
   };
 
   return (
     <Box>
       <Text fontSize="xl" fontWeight="bold" ml={8}>Login Page</Text>
-      <Input value={password} onChange={(e) => setPassword(e.target.value)}></Input>
-      <Button onClick={handleLogin}>Login</Button>
+      <Box display="flex" m={8}>
+        <Input
+          w={'50vw'}
+          mr={2}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}>
+        </Input>
+        <Button onClick={handleLogin}>Login</Button>
+      </Box>
     </Box>
   );
 }
