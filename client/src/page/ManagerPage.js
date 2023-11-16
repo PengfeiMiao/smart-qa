@@ -18,14 +18,16 @@ import PromptEditor from "../component/PromptEditor";
 import LabelValue from "../component/LabelValue";
 import {GlobalContext} from "../store/GlobalProvider";
 import {AddIcon} from "@chakra-ui/icons";
+import ToolBar from "../component/ToolBar";
 
 const ManagerPage = () => {
   const {datasetList} = useContext(GlobalContext);
 
   const renderLabelArrays = ({label, value}) => {
     return <Box>
+      <ToolBar/>
       <Text fontWeight="bold" w={100} mb={1}>{label}</Text>
-      {value.map((item, index) =>(
+      {value.map((item, index) => (
         <Tag
           size="md"
           key={index}
@@ -34,8 +36,8 @@ const ManagerPage = () => {
           colorScheme='green'
           mr={2}
         >
-        <TagLabel>{item}</TagLabel>
-        <TagCloseButton />
+          <TagLabel>{item}</TagLabel>
+          <TagCloseButton/>
         </Tag>
       ))}
       <Tag
@@ -44,7 +46,7 @@ const ManagerPage = () => {
         variant='solid'
         colorScheme='green'
       >
-        <TagLabel as={AddIcon} />
+        <TagLabel as={AddIcon}/>
       </Tag>
     </Box>;
   }
@@ -66,7 +68,8 @@ const ManagerPage = () => {
             <AccordionPanel pb={2}>
               <LabelValue label={'Total'} value={dataset.total} labelStyle={{width: '100px'}}></LabelValue>
               <Divider marginY={2}/>
-              <LabelValue label={'CreatedAt'} value={moment(dataset.created_at).format('YYYY-MM-DD HH:mm:ss')} labelStyle={{width: '100px'}}></LabelValue>
+              <LabelValue label={'CreatedAt'} value={moment(dataset.created_at).format('YYYY-MM-DD HH:mm:ss')}
+                          labelStyle={{width: '100px'}}></LabelValue>
               <Divider marginY={2}/>
               {renderLabelArrays({label: 'Tags', value: dataset.tags})}
               <Divider marginY={2}/>

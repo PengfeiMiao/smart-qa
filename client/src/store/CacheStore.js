@@ -1,4 +1,5 @@
 import moment from "moment";
+import Cookies from 'js-cookie';
 
 const getJson = (key) => {
   return JSON.parse(localStorage.getItem(key) ?? "{}");
@@ -38,4 +39,12 @@ export const refreshHash = (key, field) => {
   if(value) {
     setHash(key, field, value);
   }
+};
+
+export const getCookie = (key) => {
+  return Cookies.get(key);
+};
+
+export const setCookie = (key, value, expires=1) => {
+  Cookies.set(key, value, { expires: expires });
 };

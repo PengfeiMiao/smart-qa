@@ -11,7 +11,6 @@ import {
   ListItem,
   Text
 } from '@chakra-ui/react';
-import '../page/index.css'
 import Analysis from "./Analysis";
 import LabelValue from "./LabelValue";
 
@@ -48,6 +47,19 @@ const QuestionList = ({ questions }) => {
                 <AccordionPanel pb={2}>
                   <LabelValue label={'Answer:'} value={question.answer} labelStyle={{width: '80px'}}></LabelValue>
                   <LabelValue label={'Vote:'} value={question.vote} labelStyle={{width: '80px'}}></LabelValue>
+                </AccordionPanel>
+              </AccordionItem>
+              <AccordionItem>
+                <h2>
+                  <AccordionButton pl={2}>
+                    <Box as="span" flex='1' textAlign='left' fontWeight="bold">
+                      Notes
+                    </Box>
+                    <AccordionIcon/>
+                  </AccordionButton>
+                </h2>
+                <AccordionPanel pb={2}>
+                  <LabelValue label={'Note1:'} value={'这是一条笔记'} labelStyle={{width: '80px'}}></LabelValue>
                 </AccordionPanel>
               </AccordionItem>
             </Accordion>

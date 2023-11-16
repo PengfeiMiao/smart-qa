@@ -1,3 +1,5 @@
+import {getCookie} from "../store/CacheStore";
+
 const BASE_URL = 'http://localhost:8000';
 // const BASE_URL = '/api';
 
@@ -24,8 +26,24 @@ export const updateDataset = async (datasetId, payload) => {
 };
 
 export const updateQuestion = async (datasetId, questionId, payload) => {
+  let token = preAuth();
+  if (!token) {
+    return;
+  }
   return await fetchApi(`${BASE_URL}/datasets/${datasetId}/questions/${questionId}`, {
     method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify(payload)
+  });
+};
+
+export const loginApi = async (payload) => {
+  console.log(123)
+  return await fetch(`${BASE_URL}/login`, {
+    method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
@@ -34,6 +52,15 @@ export const updateQuestion = async (datasetId, questionId, payload) => {
 };
 
 function fetchApi(url, options) {
+  let token = preAuth();
+  if (!token) {
+    return;
+  }
+  if(!options) {
+    options = {};
+  }
+  let {headers = {}} = options;
+  options.headers = {...headers, 'Authorization': `Bearer ${token}`};
   return fetch(url, options)
     .then(response => {
       if (!response.ok) {
@@ -46,4 +73,13 @@ function fetchApi(url, options) {
       // throw error;
       // alert('An error occurred:' + error);
     });
+};
+
+function preAuth() {
+  let token = getCookie('token');
+  if (!token && window.location.pathname !== '/login') {
+    window.location.assign('/login');
+    return '';
+  }
+  return token;
 }

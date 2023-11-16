@@ -1,23 +1,12 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {
-  Box,
-  Text,
-  ListItem,
-  Heading,
-  List,
-  Accordion,
-  AccordionItem,
-  AccordionButton,
-  AccordionIcon, AccordionPanel
-} from '@chakra-ui/react';
+import {Box, Text} from '@chakra-ui/react';
 import Pagination from '../component/Pagination';
 import {getQuestions} from "../api/api";
 import './index.css'
-import Analysis from "../component/Analysis";
 import {useParams} from "react-router-dom";
-import LabelValue from "../component/LabelValue";
 import {GlobalContext} from "../store/GlobalProvider";
 import QuestionList from "../component/QuestionList";
+import ToolBar from "../component/ToolBar";
 
 const QuesBankPage = () => {
   const {setCurrentPosition} = useContext(GlobalContext);
@@ -44,6 +33,7 @@ const QuesBankPage = () => {
 
   return (
     <Box>
+      <ToolBar/>
       <Text fontSize="xl" fontWeight="bold" ml={8}>Question List</Text>
       <QuestionList questions={questionList}></QuestionList>
       <Box className={"pagination-container"}>

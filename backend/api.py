@@ -1,8 +1,10 @@
-from fastapi import FastAPI
-from fastapi.responses import StreamingResponse
-from fastapi.encoders import jsonable_encoder
 from typing import Optional
 
+from fastapi import FastAPI, Request, status
+from fastapi.encoders import jsonable_encoder
+from fastapi.responses import StreamingResponse, JSONResponse
+
+from backend.config.config import SECRET_KEY
 from backend.entity.dataset import Dataset
 from backend.entity.note import Note
 from backend.entity.page import Page
@@ -10,6 +12,7 @@ from backend.entity.question import Question
 from backend.model.dataset_model import DatasetModel
 from backend.model.note_model import NoteModel
 from backend.model.question_model import QuestionModel
+from backend.model.user_model import UserModel
 from backend.service.openai_helper import OpenAIHelper
 from backend.service.pg_helper import PgDBHelper
 from backend.util.mapper import clear_dict, group_dict
@@ -17,11 +20,29 @@ from backend.util.mapper import clear_dict, group_dict
 app = FastAPI()
 pgHelper = PgDBHelper()
 openai = OpenAIHelper()
+unauthorized_res = JSONResponse(
+    status_code=status.HTTP_401_UNAUTHORIZED,
+    content={"detail": "Unauthorized"},
+    headers={"WWW-Authenticate": "Bearer"})
 
 
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
+@app.middleware("http")
+async def check_authorization(request: Request, call_next):
+    if request.url.path != "/login":
+        auth_header = request.headers.get("Authorization")
+        if not auth_header or not auth_header.startswith('Bearer ') or auth_header.split(' ')[1] != SECRET_KEY:
+            return unauthorized_res
+
+    response = await call_next(request)
+    return response
+
+
+@app.post("/login")
+async def login(data: UserModel):
+    data_dict = jsonable_encoder(data)
+    if data_dict['password'] != SECRET_KEY:
+        return unauthorized_res
+    return {"status": True}
 
 
 @app.get("/datasets/{dataset_id}/questions")
