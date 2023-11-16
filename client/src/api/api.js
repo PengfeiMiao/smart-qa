@@ -8,7 +8,15 @@ export const getQuestions = async (datasetId, currentPage) => {
 };
 
 export const analyzeQuestion = async (datasetId, questionId) => {
-  return await fetch(`${BASE_URL}/datasets/${datasetId}/questions/${questionId}`);
+  let token = preAuth();
+  if (!token) {
+    return;
+  }
+  return await fetch(`${BASE_URL}/datasets/${datasetId}/questions/${questionId}`, {
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  });
 };
 
 export const getDatasets = async (currentPage, pageSize) => {
@@ -26,15 +34,10 @@ export const updateDataset = async (datasetId, payload) => {
 };
 
 export const updateQuestion = async (datasetId, questionId, payload) => {
-  let token = preAuth();
-  if (!token) {
-    return;
-  }
   return await fetchApi(`${BASE_URL}/datasets/${datasetId}/questions/${questionId}`, {
     method: 'PATCH',
     headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
+      'Content-Type': 'application/json'
     },
     body: JSON.stringify(payload)
   });
