@@ -10,6 +10,7 @@ const NotePanel = ({question}) => {
     if (newNote?.trim() === note.note) return;
     let resp = await upsertNote({
       question_id: question.id,
+      dataset_id: question.dataset_id,
       note: newNote,
       tags: []
     });

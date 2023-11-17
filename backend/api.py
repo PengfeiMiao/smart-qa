@@ -134,6 +134,7 @@ async def upsert_note(data: NoteModel):
             updated = Note.parse(rows[0])
             updated.note = data_dict['note']
             updated.tags = data_dict['tags']
+            updated.dataset_id = data_dict['dataset_id']
             pgHelper.update(table, updated.to_dict())
             return Note.parse(pgHelper.get(table, updated.id))
 
