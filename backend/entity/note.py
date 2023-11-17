@@ -12,8 +12,8 @@ class Note:
         self.question_id = question_id
         self.created_at = created_at
 
-    def to_dict(self):
-        return to_dict(self)
+    def to_dict(self, ignore_id=False):
+        return to_dict(self, ignore_id=ignore_id)
 
     @staticmethod
     def parse(row):

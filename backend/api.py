@@ -119,3 +119,23 @@ async def update_note(id: int, data: NoteModel):
     data_dict['id'] = id
     pid = pgHelper.update(table, clear_dict(data_dict))
     return Note.parse(pgHelper.get(table, pid))
+
+
+@app.put("/notes")
+async def upsert_note(data: NoteModel):
+    table = 'notes'
+    data_dict = jsonable_encoder(data)
+    if data_dict.get('question_id') is not None:
+        filters = {'question_id': data_dict['question_id']}
+        if data_dict.get('id') is not None:
+            filters['id'] = data_dict.get('id')
+        rows = pgHelper.get_all(table, filters=filters)
+        if rows is not None and len(rows) > 0:
+            updated = Note.parse(rows[0])
+            updated.note = data_dict['note']
+            updated.tags = data_dict['tags']
+            pgHelper.update(table, updated.to_dict())
+            return Note.parse(pgHelper.get(table, updated.id))
+
+    pid = pgHelper.save(table, clear_dict(data_dict))
+    return Note.parse(pgHelper.get(table, pid))
