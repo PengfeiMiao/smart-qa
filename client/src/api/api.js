@@ -24,34 +24,20 @@ export const getDatasets = async (currentPage, pageSize) => {
 };
 
 export const updateDataset = async (datasetId, payload) => {
-  return await fetchApi(`${BASE_URL}/datasets/${datasetId}`, {
-    method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(payload)
-  });
+  return await updateApi(`${BASE_URL}/datasets/${datasetId}`, payload, 'PATCH');
 };
 
+export const upsertNote = async (payload) => {
+  return await updateApi(`${BASE_URL}/notes`, payload, 'PUT');
+};
+
+
 export const updateQuestion = async (datasetId, questionId, payload) => {
-  return await fetchApi(`${BASE_URL}/datasets/${datasetId}/questions/${questionId}`, {
-    method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(payload)
-  });
+  return await updateApi(`${BASE_URL}/datasets/${datasetId}/questions/${questionId}`, payload, 'PATCH');
 };
 
 export const loginApi = async (payload) => {
-  console.log(123)
-  return await fetch(`${BASE_URL}/login`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(payload)
-  });
+  return await updateApi(`${BASE_URL}/login`, payload, 'POST');
 };
 
 function fetchApi(url, options) {
@@ -76,7 +62,17 @@ function fetchApi(url, options) {
       // throw error;
       // alert('An error occurred:' + error);
     });
-};
+}
+
+async function updateApi(url, payload, method) {
+  return await fetchApi(url, {
+    method: method,
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(payload)
+  });
+}
 
 function preAuth() {
   let token = getCookie('token');

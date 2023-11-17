@@ -13,6 +13,7 @@ import {
 } from '@chakra-ui/react';
 import Analysis from "./Analysis";
 import LabelValue from "./LabelValue";
+import NotePanel from "./NotePanel";
 
 const QuestionList = ({ questions }) => {
   return (
@@ -59,7 +60,7 @@ const QuestionList = ({ questions }) => {
                   </AccordionButton>
                 </h2>
                 <AccordionPanel pb={2}>
-                  <LabelValue label={'Note1:'} value={'这是一条笔记'} labelStyle={{width: '80px'}}></LabelValue>
+                  <NotePanel question={question}></NotePanel>
                 </AccordionPanel>
               </AccordionItem>
             </Accordion>

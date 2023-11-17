@@ -2,7 +2,6 @@ import React, {useContext, useEffect, useState} from 'react';
 import {Box, Text} from '@chakra-ui/react';
 import Pagination from '../component/Pagination';
 import {getQuestions} from "../api/api";
-import './index.css'
 import {useParams} from "react-router-dom";
 import {GlobalContext} from "../store/GlobalProvider";
 import QuestionList from "../component/QuestionList";
@@ -36,14 +35,12 @@ const QuesBankPage = () => {
       <ToolBar/>
       <Text fontSize="xl" fontWeight="bold" ml={8}>Question List</Text>
       <QuestionList questions={questionList}></QuestionList>
-      <Box className={"pagination-container"}>
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={handlePageChange}
-          onRoute={(page) => `/question-bank/${datasetId}/view/${page}`}
-        />
-      </Box>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+        onRoute={(page) => `/question-bank/${datasetId}/view/${page}`}
+      />
     </Box>
   );
 }

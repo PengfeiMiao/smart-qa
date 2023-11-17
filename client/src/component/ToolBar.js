@@ -19,12 +19,12 @@ const ToolBar = () => {
 
   return (
     <Tabs defaultIndex={getActiveTabIndex(location.pathname)}>
-      <TabList className={"tab-headers"}>
+      <TabList position={'fixed'} w={'100%'} top={0} left={0} background={'white'} zIndex={1000}>
         <Link to={`/question-bank/${currentPosition.datasetId}/view/${currentPosition.page}`}>
-          <Tab className={"tab-header"}>Question Bank</Tab>
+          <Tab fontWeight={'bold'}>Question Bank</Tab>
         </Link>
         <Link to={'/management'}>
-          <Tab className={"tab-header"}>Management</Tab>
+          <Tab fontWeight={'bold'}>Management</Tab>
         </Link>
         {/*<Tab className={"tab-header"}>My Stars</Tab>*/}
       </TabList>

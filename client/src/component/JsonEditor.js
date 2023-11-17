@@ -1,32 +1,35 @@
 import React, {useContext, useState} from 'react';
-import {Box, Text, Textarea, Button, Alert, AlertIcon} from '@chakra-ui/react';
+import {
+  Alert,
+  AlertIcon,
+  Box,
+  ButtonGroup,
+  Editable,
+  EditablePreview,
+  EditableTextarea,
+  Flex,
+  IconButton,
+  Text,
+  useEditableControls
+} from '@chakra-ui/react';
 import {updateDataset} from "../api/api";
 import {GlobalContext} from "../store/GlobalProvider";
+import {CheckIcon, CloseIcon, EditIcon} from "@chakra-ui/icons";
 
-const PromptEditor = ({label, value, id}) => {
+const JsonEditor = ({label, value, id}) => {
   const initialValue = JSON.stringify(value, null, 2) ?? '';
-  const [isEditing, setIsEditing] = useState(false);
   const [updateStatus, setUpdateStatus] = useState(0);
   const [alertHidden, setAlertHidden] = useState(true);
   const [editedValue, setEditedValue] = useState(initialValue);
   const {getDatasetList} = useContext(GlobalContext);
   const alertMsg = ['Succeed to Update Dataset!', 'Failed to Update Dataset!', 'Failed to Parse Json!']
 
-  const handleStartEditing = () => {
-    setIsEditing(true);
-  };
-
-  const handleCancelEditing = () => {
-    setIsEditing(false);
-    setEditedValue(initialValue);
-  };
-
   function handleShowAlert() {
     setAlertHidden(false);
     setTimeout(() => setAlertHidden(true), 1000);
   }
 
-  const handleConfirmEditing = () => {
+  const handleConfirm = () => {
     let prompts;
     try {
       prompts = JSON.parse(editedValue);
@@ -45,12 +48,31 @@ const PromptEditor = ({label, value, id}) => {
       setUpdateStatus(2);
     }).finally(() => {
       handleShowAlert();
-      setIsEditing(false);
     });
   };
 
-  const handleValueChange = (event) => {
-    setEditedValue(event.target.value);
+  const handleChange = (value) => {
+    setEditedValue(value);
+  };
+
+  const EditableControls = () => {
+    const {
+      isEditing,
+      getSubmitButtonProps,
+      getCancelButtonProps,
+      getEditButtonProps,
+    } = useEditableControls();
+
+    return isEditing ? (
+      <ButtonGroup justifyContent='left' size='sm'>
+        <IconButton icon={<CheckIcon />} {...getSubmitButtonProps()} />
+        <IconButton icon={<CloseIcon />} {...getCancelButtonProps()} />
+      </ButtonGroup>
+    ) : (
+      <Flex justifyContent='left'>
+        <IconButton size='sm' icon={<EditIcon />} {...getEditButtonProps()} />
+      </Flex>
+    )
   };
 
   return (
@@ -63,36 +85,19 @@ const PromptEditor = ({label, value, id}) => {
       <Text fontWeight="bold" w={100} mb={1}>
         {label}
       </Text>
-      {isEditing ? (
-        <Box position="relative">
-          <Textarea
-            ml={2}
-            style={{whiteSpace: 'pre-line'}}
-            value={editedValue}
-            onChange={handleValueChange}
-            h={200}
-          />
-          <Box position="absolute" bottom={2} right={2} style={{zIndex: 100}}>
-            <Button size="sm" colorScheme="green" mr={2} onClick={handleConfirmEditing}>
-              Confirm
-            </Button>
-            <Button size="sm" colorScheme="red" onClick={handleCancelEditing}>
-              Cancel
-            </Button>
-          </Box>
-        </Box>
-      ) : (
-        <Textarea
-          ml={2}
-          style={{whiteSpace: 'pre-line'}}
-          value={editedValue}
-          readOnly
-          h={200}
-          onClick={handleStartEditing}
-        />
-      )}
+      <Editable
+        onSubmit={handleConfirm}
+        onChange={handleChange}
+        style={{whiteSpace: 'pre-line'}}
+        value={editedValue}
+        isPreviewFocusable={false}
+      >
+        <EditablePreview maxH="250px" overflowY="auto" />
+        <EditableTextarea rows={10} />
+        <EditableControls />
+      </Editable>
     </Box>
   );
 };
 
-export default PromptEditor;
+export default JsonEditor;

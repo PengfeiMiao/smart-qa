@@ -1,8 +1,8 @@
 import React from 'react';
-import { Box, Button } from '@chakra-ui/react';
+import {Box, Button} from '@chakra-ui/react';
 import {useNavigate} from "react-router-dom";
 
-function Pagination({ currentPage, totalPages, onPageChange, onRoute }) {
+function Pagination({currentPage, totalPages, onPageChange, onRoute}) {
   const navigate = useNavigate();
 
   const handlePathChange = (page) => {
@@ -29,7 +29,8 @@ function Pagination({ currentPage, totalPages, onPageChange, onRoute }) {
   };
 
   return (
-    <Box mt={4} display="flex" justifyContent="center">
+    <Box paddingY={3} position={'fixed'} w={'100%'} bottom={0} background={'white'}
+         boxShadow={'0 -2px 4px rgba(0, 0, 0, 0.1)'} display="flex" justifyContent="center">
       <Button
         onClick={handlePreviousPage}
         isDisabled={currentPage === 1}

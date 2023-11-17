@@ -13,8 +13,7 @@ import {
   TagLabel,
   Text
 } from '@chakra-ui/react';
-import './index.css'
-import PromptEditor from "../component/PromptEditor";
+import JsonEditor from "../component/JsonEditor";
 import LabelValue from "../component/LabelValue";
 import {GlobalContext} from "../store/GlobalProvider";
 import {AddIcon} from "@chakra-ui/icons";
@@ -73,7 +72,7 @@ const ManagerPage = () => {
               <Divider marginY={2}/>
               {renderLabelArrays({label: 'Tags', value: dataset.tags})}
               <Divider marginY={2}/>
-              <PromptEditor label={'Prompts'} value={dataset.prompts} id={dataset.id}></PromptEditor>
+              <JsonEditor label={'Prompts'} value={dataset.prompts} id={dataset.id}></JsonEditor>
             </AccordionPanel>
           </AccordionItem>
         ))}

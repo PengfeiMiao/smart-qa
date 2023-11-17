@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import {Box, Button, Input, Text} from '@chakra-ui/react';
-import './index.css'
 import {setCookie} from "../store/CacheStore";
 import {loginApi} from "../api/api";
 
