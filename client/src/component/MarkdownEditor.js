@@ -64,6 +64,7 @@ const MarkdownEditor = ({input, onSubmit}) => {
         onEdit={() => setInEdit(true)}
         style={{whiteSpace: 'pre-line'}}
         value={markdown}
+        placeholder={'take note here, markdown is supported~'}
         isPreviewFocusable={false}
       >
         <EditableTextarea rows={5} p={2} hidden={!inEdit}/>
