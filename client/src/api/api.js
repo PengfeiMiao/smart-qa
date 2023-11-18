@@ -37,7 +37,13 @@ export const updateQuestion = async (datasetId, questionId, payload) => {
 };
 
 export const loginApi = async (payload) => {
-  return await updateApi(`${BASE_URL}/login`, payload, 'POST');
+  return await fetch(`${BASE_URL}/login`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(payload)
+  });
 };
 
 function fetchApi(url, options) {
@@ -59,7 +65,6 @@ function fetchApi(url, options) {
     })
     .catch(error => {
       console.error('An error occurred:', error);
-      // throw error;
       // alert('An error occurred:' + error);
     });
 }
