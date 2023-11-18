@@ -1,7 +1,6 @@
 import {Box, Editable, EditableInput, EditablePreview, Tag, TagCloseButton, TagLabel, Text} from "@chakra-ui/react";
-import ToolBar from "./ToolBar";
 import {AddIcon} from "@chakra-ui/icons";
-import React, {useContext, useRef, useState, useEffect} from "react";
+import React, {useContext, useEffect, useRef, useState} from "react";
 import {GlobalContext} from "../store/GlobalProvider";
 import {updateDataset} from "../api/api";
 
@@ -53,7 +52,6 @@ const TagList = ({label, value, id}) => {
 
   return (
     <Box>
-      <ToolBar/>
       <Text fontWeight="bold" w={100} mb={1}>{label}</Text>
       <Box lineHeight={2} mt={3}>
         {tags.map((item, index) => (

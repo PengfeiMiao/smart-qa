@@ -17,7 +17,7 @@ export const getHash = (key, field) => {
 
 export const setHash = (key, field, value, expires=1) => {
   let json = getJson(key);
-  json[field] = {value, expiresAt: moment().add(expires, 'hours').valueOf()};
+  json[field] = {value, expiresAt: moment().add(expires, 'days').valueOf()};
   localStorage.setItem(key, JSON.stringify(json));
 };
 

@@ -14,12 +14,14 @@ import JsonEditor from "../component/JsonEditor";
 import LabelValue from "../component/LabelValue";
 import {GlobalContext} from "../store/GlobalProvider";
 import TagList from "../component/TagList";
+import ToolBar from "../component/ToolBar";
 
 const ManagerPage = () => {
   const {datasetList} = useContext(GlobalContext);
 
   return (
     <Box>
+      <ToolBar/>
       <Text fontSize="xl" fontWeight="bold" ml={8}>Manager List</Text>
       <Accordion defaultIndex={[0]} allowMultiple mt={4} marginX={8}>
         {datasetList?.map((dataset) => (

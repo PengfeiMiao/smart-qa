@@ -7,12 +7,12 @@ export const getQuestions = async (datasetId, currentPage) => {
   return await fetchApi(`${BASE_URL}/datasets/${datasetId}/questions?page=${currentPage}`);
 };
 
-export const analyzeQuestion = async (datasetId, questionId) => {
+export const analyzeQuestion = (datasetId, questionId) => {
   let token = preAuth();
   if (!token) {
     return;
   }
-  return await fetch(`${BASE_URL}/datasets/${datasetId}/questions/${questionId}`, {
+  return fetch(`${BASE_URL}/datasets/${datasetId}/questions/${questionId}`, {
     headers: {
       'Authorization': `Bearer ${token}`
     }

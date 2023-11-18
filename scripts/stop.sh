@@ -19,8 +19,3 @@ function kill_process_on_port {
 
 kill_process_on_port "8000"
 kill_process_on_port "3001"
-
-nohup python3 -m uvicorn backend.api:app --reload > /dev/null 2>&1 &
-echo "start backend"
-cd client && nohup npm run prod > /dev/null 2>&1 &
-echo "start client"
