@@ -8,47 +8,15 @@ import {
   AccordionPanel,
   Box,
   Divider,
-  Tag,
-  TagCloseButton,
-  TagLabel,
   Text
 } from '@chakra-ui/react';
 import JsonEditor from "../component/JsonEditor";
 import LabelValue from "../component/LabelValue";
 import {GlobalContext} from "../store/GlobalProvider";
-import {AddIcon} from "@chakra-ui/icons";
-import ToolBar from "../component/ToolBar";
+import TagList from "../component/TagList";
 
 const ManagerPage = () => {
   const {datasetList} = useContext(GlobalContext);
-
-  const renderLabelArrays = ({label, value}) => {
-    return <Box>
-      <ToolBar/>
-      <Text fontWeight="bold" w={100} mb={1}>{label}</Text>
-      {value.map((item, index) => (
-        <Tag
-          size="md"
-          key={index}
-          borderRadius='full'
-          variant='solid'
-          colorScheme='green'
-          mr={2}
-        >
-          <TagLabel>{item}</TagLabel>
-          <TagCloseButton/>
-        </Tag>
-      ))}
-      <Tag
-        size="md"
-        borderRadius='full'
-        variant='solid'
-        colorScheme='green'
-      >
-        <TagLabel as={AddIcon}/>
-      </Tag>
-    </Box>;
-  }
 
   return (
     <Box>
@@ -70,7 +38,7 @@ const ManagerPage = () => {
               <LabelValue label={'CreatedAt'} value={moment(dataset.created_at).format('YYYY-MM-DD HH:mm:ss')}
                           labelStyle={{width: '100px'}}></LabelValue>
               <Divider marginY={2}/>
-              {renderLabelArrays({label: 'Tags', value: dataset.tags})}
+              <TagList label={'Tags'} value={dataset.tags} id={dataset.id}></TagList>
               <Divider marginY={2}/>
               <JsonEditor label={'Prompts'} value={dataset.prompts} id={dataset.id}></JsonEditor>
             </AccordionPanel>
