@@ -17,8 +17,17 @@ const TagList = ({label, value, id}) => {
     }
   }, [tags]);
 
+  const handleSave = () => {
+    updateDataset(id, {
+      'id': id,
+      'tags': tags
+    }).then(() => {
+      getDatasetList();
+    });
+  };
+
   const handleCreate = () => {
-    setTags([...tags, ""]);
+    setTags([...tags, "New Tag"]);
     setInEdit(true);
   };
 
@@ -30,44 +39,57 @@ const TagList = ({label, value, id}) => {
 
   const handleClose = (index) => {
     tags.splice(index, 1);
-    updateDataset(id, {
-      'id': id,
-      'tags': tags
-    }).then(() => {
-      getDatasetList();
-    });
+    handleSave();
+  };
+
+  const computeWidth = (item) => {
+    const inputText = item;
+    const canvas = document.createElement("canvas");
+    const context = canvas.getContext("2d");
+    context.font = "inherit";
+    const textWidth = context.measureText(inputText).width;
+    return `${textWidth * 1.5 + 10}px`;
   };
 
   return (
     <Box>
       <ToolBar/>
       <Text fontWeight="bold" w={100} mb={1}>{label}</Text>
-      {tags.map((item, index) => (
+      <Box lineHeight={2} mt={3}>
+        {tags.map((item, index) => (
+          <Tag
+            size="md"
+            key={index}
+            borderRadius="full"
+            variant="solid"
+            colorScheme="green"
+            mr={2}
+          >
+            <TagLabel>
+              <Editable
+                value={item}
+                placeholder={'New Tag'}
+                onEdit={() => setInEdit(false)}
+                onChange={(val) => handleChange(index, val)}
+                onBlur={handleSave}
+              >
+                <EditablePreview ref={index === tags.length - 1 ? inputRef : null}/>
+                <EditableInput width={computeWidth(item)}/>
+              </Editable>
+            </TagLabel>
+            <TagCloseButton onClick={() => handleClose(index)}/>
+          </Tag>
+        ))}
         <Tag
           size="md"
-          key={index}
           borderRadius="full"
           variant="solid"
           colorScheme="green"
-          mr={2}
+          onClick={handleCreate}
         >
-          <TagLabel>
-            <Editable value={item} onChange={(val) => handleChange(index, val)}>
-              <EditablePreview />
-              <EditableInput ref={index === tags.length - 1 ? inputRef : null} />
-            </Editable>
-          </TagLabel>
-          <TagCloseButton onClick={() => handleClose(index)} />
+          <TagLabel as={AddIcon} />
         </Tag>
-      ))}
-      <Tag
-        size="md"
-        borderRadius="full"
-        variant="solid"
-        colorScheme="green"
-      >
-        <TagLabel as={AddIcon} onClick={handleCreate}/>
-      </Tag>
+      </Box>
     </Box>
   );
 };
