@@ -44,6 +44,7 @@ const Analysis = ({ question }) => {
         readStream();
       })
       .catch(error => {
+        setLoading(false);
         console.error('Error:', error);
       });
   }
