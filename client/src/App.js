@@ -12,7 +12,7 @@ function App() {
     <GlobalProvider>
       <ChakraProvider>
         <Router>
-          <Box mt={12}>
+          <Box pt={12} background={'#F9F9F9'}>
             <Routes>
               <Route exact path='/' element={<Navigate to="/question-bank/1/view/1"/>}/>
               <Route exact path="/question-bank/:dataset/view/:page" element={<QuesBankPage/>}/>

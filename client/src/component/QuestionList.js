@@ -16,6 +16,11 @@ import LabelValue from "./LabelValue";
 import NotePanel from "./NotePanel";
 
 const QuestionList = ({ questions }) => {
+  const textStyle = {
+    color: '#4e4e4e',
+    fontSize: '16.75px'
+  };
+
   return (
     <Box mb={24}>
       {questions?.map((question) => (
@@ -27,11 +32,15 @@ const QuestionList = ({ questions }) => {
             </Heading>
           </Box>
           <Box p={4}>
-            <Text>{question.question}</Text>
+            <Text style={textStyle}>{question.question}</Text>
             <List mt={2} paddingX={2}>
               {Object.entries(question.options).map(([key, value]) => (
                 <ListItem key={key}>
-                  <LabelValue label={`${key}.`} value={value} labelStyle={{marginRight: '10px'}}></LabelValue>
+                  <LabelValue
+                    label={`${key}.`} value={value}
+                    labelStyle={{marginRight: '10px'}}
+                    valueStyle={textStyle}>
+                  </LabelValue>
                 </ListItem>
               ))}
             </List>

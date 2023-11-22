@@ -31,7 +31,7 @@ const QuesBankPage = () => {
   }, [currentPage]);
 
   return (
-    <Box>
+    <Box h={'100vh'}>
       <ToolBar/>
       <Text fontSize="xl" fontWeight="bold" ml={8}>Question List</Text>
       <QuestionList questions={questionList}></QuestionList>

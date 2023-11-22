@@ -10,6 +10,7 @@ class OpenAIHelper:
     def __init__(self):
         try:
             self.model = "gpt-3.5-turbo"
+            # self.client = None
             self.client = OpenAI(
                 organization=OPENAI_ORG,
                 api_key=OPENAI_KEY
