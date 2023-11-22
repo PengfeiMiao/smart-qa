@@ -6,7 +6,7 @@ import {
   Editable,
   EditableTextarea,
   Flex,
-  IconButton,
+  IconButton, Text,
   useEditableControls
 } from "@chakra-ui/react";
 import styles from './MarkdownEditor.module.css'
@@ -14,7 +14,7 @@ import {CheckIcon, CloseIcon, EditIcon} from "@chakra-ui/icons";
 import remarkGfm from "remark-gfm";
 import rehypeReact from "rehype-react";
 
-const MarkdownEditor = ({input, onSubmit}) => {
+const MarkdownEditor = ({input, onSubmit, translate}) => {
   const [markdown, setMarkdown] = useState(input ?? '');
   const [inEdit, setInEdit] = useState(false);
 
@@ -54,9 +54,9 @@ const MarkdownEditor = ({input, onSubmit}) => {
 
   return (
     <Box style={styles}>
-      <Box p={2} borderRadius={4} background={'gray.100'} hidden={inEdit || !markdown || !markdown.trim()}>
+      <Text p={2} borderRadius={4} background={'gray.100'} hidden={inEdit || !markdown || !markdown.trim()} translate={translate}>
         <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeReact]}>{markdown}</ReactMarkdown>
-      </Box>
+      </Text>
       <Editable
         onSubmit={handleConfirm}
         onCancel={handleCancel}

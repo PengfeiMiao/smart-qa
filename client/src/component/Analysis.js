@@ -4,7 +4,7 @@ import {analyzeQuestion, updateQuestion} from "../api/api";
 import {CheckIcon, PlusSquareIcon, RepeatIcon} from '@chakra-ui/icons'
 import {getHash, refreshHash, removeHash, setHash} from "../store/CacheStore";
 
-const Analysis = ({ question }) => {
+const Analysis = ({ question, translate }) => {
   const [analysis, setAnalysis] = useState(question.analysis ?? '');
   const [hidden, setHidden] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -96,7 +96,7 @@ const Analysis = ({ question }) => {
         </Button>
       </Box>
       <Box paddingX={4} hidden={hidden}>
-        <Text style={{ whiteSpace: 'pre-line' }}>{analysis}</Text>
+        <Text style={{ whiteSpace: 'pre-line' }} translate={translate}>{analysis}</Text>
       </Box>
     </Box>
   );

@@ -3,7 +3,7 @@ import React, {useState} from "react";
 import MarkdownEditor from "./MarkdownEditor";
 import {upsertNote} from "../api/api";
 
-const NotePanel = ({question}) => {
+const NotePanel = ({question, translate}) => {
   const [note, setNote] = useState(question?.notes?.[0] ?? {note: '', tags: []});
 
   const handleSubmit = async (newNote) => {
@@ -20,7 +20,7 @@ const NotePanel = ({question}) => {
   };
 
   return (<Box>
-    <MarkdownEditor input={note.note} onSubmit={handleSubmit}></MarkdownEditor>
+    <MarkdownEditor input={note.note} onSubmit={handleSubmit} translate={translate}></MarkdownEditor>
   </Box>);
 };
 

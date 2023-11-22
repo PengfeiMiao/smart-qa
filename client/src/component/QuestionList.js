@@ -73,11 +73,11 @@ const QuestionList = ({ questions, styles }) => {
                   </AccordionButton>
                 </h2>
                 <AccordionPanel pb={2}>
-                  <NotePanel question={question}></NotePanel>
+                  <NotePanel question={question} translate="no"></NotePanel>
                 </AccordionPanel>
               </AccordionItem>
             </Accordion>
-            <Analysis question={question}></Analysis>
+            <Analysis question={question} translate="no"></Analysis>
           </Box>
         </Box>
       ))}
