@@ -34,7 +34,7 @@ const QuesBankPage = () => {
     <Box h={'100vh'}>
       <ToolBar/>
       <Text fontSize="xl" fontWeight="bold" ml={8}>Question List</Text>
-      <QuestionList questions={questionList}></QuestionList>
+      <QuestionList questions={questionList} styles={{paddingBottom: '100px'}}></QuestionList>
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}

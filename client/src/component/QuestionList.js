@@ -15,14 +15,14 @@ import Analysis from "./Analysis";
 import LabelValue from "./LabelValue";
 import NotePanel from "./NotePanel";
 
-const QuestionList = ({ questions }) => {
+const QuestionList = ({ questions, styles }) => {
   const textStyle = {
     color: '#4e4e4e',
     fontSize: '16.75px'
   };
 
   return (
-    <Box mb={24}>
+    <Box mb={24} style={styles}>
       {questions?.map((question) => (
         <Box key={question.id} mt={4} marginX={8} border="1px solid gray" borderRadius="md"
              boxShadow="0 2px 4px rgba(0, 0, 0, 0.2)" fontFamily="sans-serif">
@@ -55,8 +55,12 @@ const QuestionList = ({ questions }) => {
                   </AccordionButton>
                 </h2>
                 <AccordionPanel pb={2}>
-                  <LabelValue label={'Answer:'} value={question.answer} labelStyle={{width: '80px'}}></LabelValue>
-                  <LabelValue label={'Vote:'} value={question.vote} labelStyle={{width: '80px'}}></LabelValue>
+                  <LabelValue
+                    label={'Answer:'} value={question.answer}
+                    labelStyle={{width: '80px'}} translate="no"></LabelValue>
+                  <LabelValue
+                    label={'Vote:'} value={question.vote}
+                    labelStyle={{width: '80px'}} translate="no"></LabelValue>
                 </AccordionPanel>
               </AccordionItem>
               <AccordionItem>
