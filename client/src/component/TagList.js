@@ -53,7 +53,7 @@ const TagList = ({label, value, id}) => {
   return (
     <Box>
       <Text fontWeight="bold" w={100} mb={1}>{label}</Text>
-      <Box lineHeight={2} mt={3}>
+      <Box lineHeight={2} mt={3} translate="no">
         {tags.map((item, index) => (
           <Tag
             size="md"

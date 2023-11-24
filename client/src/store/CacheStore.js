@@ -41,8 +41,12 @@ export const refreshHash = (key, field) => {
   }
 };
 
-export const getCookie = (key) => {
-  return Cookies.get(key);
+export const getCookie = (key, refresh=true) => {
+  let value = Cookies.get(key);
+  if (value && refresh) {
+    setCookie(key, value);
+  }
+  return value;
 };
 
 export const setCookie = (key, value, expires=1) => {

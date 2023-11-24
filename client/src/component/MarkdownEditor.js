@@ -42,21 +42,24 @@ const MarkdownEditor = ({input, onSubmit, translate}) => {
 
     return isEditing ? (
       <ButtonGroup justifyContent='left' size='sm'>
-        <IconButton icon={<CheckIcon />} {...getSubmitButtonProps()} />
-        <IconButton icon={<CloseIcon />} {...getCancelButtonProps()} />
+        <IconButton icon={<CheckIcon/>} {...getSubmitButtonProps()} />
+        <IconButton icon={<CloseIcon/>} {...getCancelButtonProps()} />
       </ButtonGroup>
     ) : (
       <Flex justifyContent='left'>
-        <IconButton size='sm' mt={1} icon={<EditIcon />} {...getEditButtonProps()} />
+        <IconButton size='sm' mt={1} icon={<EditIcon/>} {...getEditButtonProps()} />
       </Flex>
     )
   };
 
   return (
     <Box style={styles}>
-      <Text p={2} borderRadius={4} background={'gray.100'} hidden={inEdit || !markdown || !markdown.trim()} translate={translate}>
-        <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeReact]}>{markdown}</ReactMarkdown>
-      </Text>
+      <Box p={2} borderRadius={4} background={'gray.100'} translate="no"
+           hidden={inEdit || !markdown || !markdown.trim()}>
+        <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeReact]}>
+          {markdown}
+        </ReactMarkdown>
+      </Box>
       <Editable
         onSubmit={handleConfirm}
         onCancel={handleCancel}
@@ -68,7 +71,7 @@ const MarkdownEditor = ({input, onSubmit, translate}) => {
         isPreviewFocusable={false}
       >
         <EditableTextarea rows={5} p={2} hidden={!inEdit}/>
-        <EditableControls />
+        <EditableControls/>
       </Editable>
     </Box>
   );

@@ -76,7 +76,7 @@ const JsonEditor = ({label, value, id}) => {
   };
 
   return (
-    <Box>
+    <Box translate="no">
       <Alert position="fixed" w={"20vw"} minW={"200px"} left={"40vw"} top={0} zIndex={1000} borderRadius={5}
              status={updateStatus === 1 ? 'success' : 'error'} hidden={alertHidden}>
         <AlertIcon/>

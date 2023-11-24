@@ -22,7 +22,7 @@ const ManagerPage = () => {
   return (
     <Box h={'100vh'}>
       <ToolBar/>
-      <Text fontSize="xl" fontWeight="bold" ml={8}>Manager List</Text>
+      <Text fontSize="xl" fontWeight="bold" ml={8}>Dataset List</Text>
       <Accordion defaultIndex={[0]} allowMultiple mt={4} marginX={8}>
         {datasetList?.map((dataset) => (
           <AccordionItem key={dataset.id}>
