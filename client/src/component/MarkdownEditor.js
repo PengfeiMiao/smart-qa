@@ -10,11 +10,11 @@ import {
   useEditableControls
 } from "@chakra-ui/react";
 import styles from './MarkdownEditor.module.css'
-import {CheckIcon, CloseIcon, EditIcon} from "@chakra-ui/icons";
+import {CheckIcon, CloseIcon, EditIcon, LinkIcon} from "@chakra-ui/icons";
 import remarkGfm from "remark-gfm";
 import rehypeReact from "rehype-react";
 
-const MarkdownEditor = ({input, onSubmit, translate}) => {
+const MarkdownEditor = ({input, onSubmit, onLink, translate}) => {
   const [markdown, setMarkdown] = useState(input ?? '');
   const [inEdit, setInEdit] = useState(false);
 
@@ -46,15 +46,16 @@ const MarkdownEditor = ({input, onSubmit, translate}) => {
         <IconButton icon={<CloseIcon/>} {...getCancelButtonProps()} />
       </ButtonGroup>
     ) : (
-      <Flex justifyContent='left'>
-        <IconButton size='sm' mt={1} icon={<EditIcon/>} {...getEditButtonProps()} />
-      </Flex>
+      <ButtonGroup justifyContent='left' size='sm' mt={1}>
+        <IconButton icon={<EditIcon/>} {...getEditButtonProps()} />
+        <IconButton icon={<LinkIcon />} aria-label={`jump to question`} title={`jump to question`} onClick={onLink} hidden={!onLink}/>
+      </ButtonGroup>
     )
   };
 
   return (
     <Box style={styles}>
-      <Box p={2} borderRadius={4} background={'gray.100'} translate="no"
+      <Box p={2} borderRadius={4} background={'gray.100'} translate={translate}
            hidden={inEdit || !markdown || !markdown.trim()}>
         <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeReact]}>
           {markdown}

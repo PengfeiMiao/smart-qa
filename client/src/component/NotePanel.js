@@ -3,14 +3,14 @@ import React, {useState} from "react";
 import MarkdownEditor from "./MarkdownEditor";
 import {upsertNote} from "../api/api";
 
-const NotePanel = ({question, translate}) => {
-  const [note, setNote] = useState(question?.notes?.[0] ?? {note: '', tags: []});
+const NotePanel = ({noteInfo, handleLink, translate}) => {
+  const [note, setNote] = useState(noteInfo);
 
   const handleSubmit = async (newNote) => {
     if (newNote?.trim() === note.note) return;
     let resp = await upsertNote({
-      question_id: question.id,
-      dataset_id: question.dataset_id,
+      question_id: note.question_id,
+      dataset_id: note.dataset_id,
       note: newNote,
       tags: []
     });
@@ -20,7 +20,7 @@ const NotePanel = ({question, translate}) => {
   };
 
   return (<Box>
-    <MarkdownEditor input={note.note} onSubmit={handleSubmit} translate={translate}></MarkdownEditor>
+    <MarkdownEditor input={note.note} onSubmit={handleSubmit} onLink={handleLink} translate={translate}></MarkdownEditor>
   </Box>);
 };
 

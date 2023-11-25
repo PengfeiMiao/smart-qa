@@ -6,6 +6,7 @@ import ManagerPage from "./page/ManagerPage";
 import QuesBankPage from "./page/QuesBankPage";
 import LoginPage from "./page/LoginPage";
 import GlobalProvider from "./store/GlobalProvider";
+import NotePage from "./page/NotePage";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
               <Route exact path='/' element={<Navigate to="/question-bank/1/view/1"/>}/>
               <Route exact path="/question-bank/:dataset/view/:page" element={<QuesBankPage/>}/>
               <Route exact path='/management' element={<ManagerPage/>}/>
+              <Route exact path='/note-bank/:dataset/view' element={<NotePage/>}/>
               <Route exact path='/login' element={<LoginPage/>}/>
             </Routes>
           </Box>

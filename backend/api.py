@@ -11,6 +11,7 @@ from backend.entity.page import Page
 from backend.entity.question import Question
 from backend.model.dataset_model import DatasetModel
 from backend.model.note_model import NoteModel
+from backend.model.note_query_model import NoteQueryModel
 from backend.model.question_model import QuestionModel
 from backend.model.user_model import UserModel
 from backend.service.openai_helper import OpenAIHelper
@@ -140,3 +141,14 @@ async def upsert_note(data: NoteModel):
 
     pid = pgHelper.save(table, clear_dict(data_dict))
     return Note.parse(pgHelper.get(table, pid))
+
+
+@app.post("/notes/search")
+async def get_questions(query: NoteQueryModel, page: Optional[int] = 1, size: Optional[int] = 10):
+    table = 'notes'
+    data_dict = jsonable_encoder(query)
+    filters = {'tags': data_dict['tags'], 'note': data_dict['note']}
+    matches = {'tags': data_dict['tags_all_match'], 'note': True}
+    total = pgHelper.count(table, filters, matches)
+    rows = pgHelper.get_all(table, page, size, filters, matches)
+    return Page([Note.parse(row) for row in rows], total, page, size)

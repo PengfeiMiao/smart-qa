@@ -31,6 +31,9 @@ export const upsertNote = async (payload) => {
   return await updateApi(`${BASE_URL}/notes`, payload, 'PUT');
 };
 
+export const searchNotes = async (payload, currentPage) => {
+  return await updateApi(`${BASE_URL}/notes/search?page=${currentPage}`, payload, 'POST');
+};
 
 export const updateQuestion = async (datasetId, questionId, payload) => {
   return await updateApi(`${BASE_URL}/datasets/${datasetId}/questions/${questionId}`, payload, 'PATCH');

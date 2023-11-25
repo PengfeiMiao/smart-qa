@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import {Box, Text} from '@chakra-ui/react';
 import Pagination from '../component/Pagination';
 import {getQuestions} from "../api/api";
-import {useParams} from "react-router-dom";
+import {useLocation, useParams} from "react-router-dom";
 import {GlobalContext} from "../store/GlobalProvider";
 import QuestionList from "../component/QuestionList";
 import ToolBar from "../component/ToolBar";
@@ -10,6 +10,9 @@ import ToolBar from "../component/ToolBar";
 const QuesBankPage = () => {
   const {setCurrentPosition} = useContext(GlobalContext);
   const { dataset, page } = useParams();
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const currentQuestionId = searchParams.get('questionId');
   const [questionList, setQuestionList] = useState([]);
   const [datasetId, setDatasetId] = useState(parseInt(dataset, 10) || 1);
   const [currentPage, setCurrentPage] = useState(parseInt(page, 10) || 1);
@@ -34,7 +37,7 @@ const QuesBankPage = () => {
     <Box h={'100vh'}>
       <ToolBar/>
       <Text fontSize="xl" fontWeight="bold" ml={8}>Question List</Text>
-      <QuestionList questions={questionList} styles={{paddingBottom: '100px'}}></QuestionList>
+      <QuestionList styles={{paddingBottom: '100px'}} questions={questionList} scrollId={currentQuestionId} />
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}

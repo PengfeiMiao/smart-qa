@@ -81,21 +81,11 @@ class PgDBHelper:
         except psycopg2.Error as e:
             print(f"Error deleting data: {e}")
 
-    def get_all(self, table, page: int = None, page_size: int = None, filters: dict = None):
+    def get_all(self, table, page: int = None, page_size: int = None, filters: dict = None, matches: dict = None):
         try:
             query = f"SELECT * FROM {table}"
-            params = []
-            if filters:
-                conditions = []
-                for key, value in filters.items():
-                    if isinstance(value, list):
-                        conditions.append(f"{key} IN %s")
-                        params.append(tuple(value))
-                    else:
-                        conditions.append(f"{key} = %s")
-                        params.append(value)
-                query += " WHERE " + " AND ".join(conditions)
-
+            params, where_sql = self.build_conditions(filters, matches)
+            query += where_sql
             query += " ORDER BY id"
             if page and page_size:
                 offset = (page - 1) * page_size
@@ -110,20 +100,11 @@ class PgDBHelper:
         except psycopg2.Error as e:
             print(f"Error retrieving data: {e}")
 
-    def count(self, table, filters: dict = None):
+    def count(self, table, filters: dict = None, matches: dict = None):
         try:
             query = f"SELECT COUNT(*) FROM {table}"
-            params = []
-            if filters:
-                conditions = []
-                for key, value in filters.items():
-                    if isinstance(value, list):
-                        conditions.append(f"{key} IN %s")
-                        params.append(tuple(value))
-                    else:
-                        conditions.append(f"{key} = %s")
-                        params.append(value)
-                query += " WHERE " + " AND ".join(conditions)
+            params, where_sql = self.build_conditions(filters, matches)
+            query += where_sql
             self.cur.execute(query, params)
             count = self.cur.fetchone()[0]
             return count
@@ -158,3 +139,35 @@ class PgDBHelper:
         self.cur.close()
         self.conn.close()
         print("Database connection closed.")
+
+    @staticmethod
+    def build_conditions(filters, matches=None):
+        if matches is None:
+            matches = {}
+        params = []
+        where_sql = ""
+        if filters:
+            conditions = []
+            for key, value in filters.items():
+                if isinstance(value, list):
+                    value = [val for val in value if val is not None]
+                    if len(value) == 0:
+                        continue
+                    if key not in matches:
+                        conditions.append(f"{key} IN %s")
+                        params.append(tuple(value))
+                    else:
+                        relation = " AND " if matches[key] is True else " OR "
+                        conditions.append("(" + relation.join([f"{key} LIKE %s"] * len(value)) + ")")
+                        params.extend([f"%{item}%" for item in value])
+                elif value is not None:
+                    if key not in matches:
+                        conditions.append(f"{key} = %s")
+                        params.append(value)
+                    else:
+                        conditions.append(f"{key} LIKE %s")
+                        params.append(f"%{value}%")
+            if len(conditions) > 0:
+                where_sql = " WHERE " + " AND ".join(conditions)
+
+        return params, where_sql

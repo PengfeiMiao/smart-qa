@@ -10,10 +10,12 @@ const ToolBar = () => {
   const getActiveTabIndex = (path) => {
     if (path.startsWith('/question-bank')) {
       return 0;
-    } else if (path.startsWith('/management')) {
+    } else if (path.startsWith('/note-bank')) {
       return 1;
-    } else {
+    } else if (path.startsWith('/management')) {
       return 2;
+    } else {
+      return 3;
     }
   };
 
@@ -23,10 +25,12 @@ const ToolBar = () => {
         <Link to={`/question-bank/${currentPosition.datasetId}/view/${currentPosition.page}`}>
           <Tab fontWeight={'bold'}>Question Bank</Tab>
         </Link>
+        <Link to={`/note-bank/${currentPosition.datasetId}/view`}>
+          <Tab fontWeight={'bold'}>Note Bank</Tab>
+        </Link>
         <Link to={'/management'}>
           <Tab fontWeight={'bold'}>Management</Tab>
         </Link>
-        {/*<Tab className={"tab-header"}>My Stars</Tab>*/}
       </TabList>
     </Tabs>
   );

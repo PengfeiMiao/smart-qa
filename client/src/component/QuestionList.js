@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
 import {
   Accordion,
   AccordionButton,
@@ -15,16 +15,26 @@ import Analysis from "./Analysis";
 import LabelValue from "./LabelValue";
 import NotePanel from "./NotePanel";
 
-const QuestionList = ({ questions, styles }) => {
+const QuestionList = ({ questions, styles, scrollId }) => {
   const textStyle = {
     color: '#4e4e4e',
     fontSize: '16.75px'
   };
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    if (containerRef.current && scrollId) {
+      const targetElement = containerRef.current.querySelector(`#Ques-${scrollId}`);
+      if (targetElement) {
+        targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+  }, [scrollId, questions]);
 
   return (
-    <Box mb={24} style={styles}>
+    <Box mb={24} style={styles} ref={containerRef}>
       {questions?.map((question) => (
-        <Box key={question.id} mt={4} marginX={8} border="1px solid gray" borderRadius="md"
+        <Box id={`Ques-${question.id}`} key={question.id} mt={4} marginX={8} border="1px solid gray" borderRadius="md"
              boxShadow="0 2px 4px rgba(0, 0, 0, 0.2)" fontFamily="sans-serif">
           <Box bgColor={"blue.300"} p={2} borderTopRadius="md">
             <Heading size='sm'>
@@ -73,7 +83,7 @@ const QuestionList = ({ questions, styles }) => {
                   </AccordionButton>
                 </h2>
                 <AccordionPanel pb={2}>
-                  <NotePanel question={question} translate="no"></NotePanel>
+                  <NotePanel noteInfo={question?.notes?.[0] ?? {note: '', tags: []}} translate="no" />
                 </AccordionPanel>
               </AccordionItem>
             </Accordion>
