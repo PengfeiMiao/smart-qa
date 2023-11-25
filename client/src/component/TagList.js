@@ -1,14 +1,22 @@
-import {Box, Editable, EditableInput, EditablePreview, Tag, TagCloseButton, TagLabel, Text} from "@chakra-ui/react";
+import {
+  Box,
+  Editable,
+  EditableInput,
+  EditablePreview,
+  Select,
+  Tag,
+  TagCloseButton,
+  TagLabel,
+  Text
+} from "@chakra-ui/react";
 import {AddIcon} from "@chakra-ui/icons";
-import React, {useContext, useEffect, useRef, useState} from "react";
-import {GlobalContext} from "../store/GlobalProvider";
-import {updateDataset} from "../api/api";
+import React, {useEffect, useRef, useState} from "react";
 
-const TagList = ({label, value, id}) => {
-  const {getDatasetList} = useContext(GlobalContext);
+const TagList = ({label, value, onSumbit, tagStyle, tagDict, editable=true}) => {
+  const inputRef = useRef(null);
   const [tags, setTags] = useState(value ?? []);
   const [inEdit, setInEdit] = useState(false);
-  const inputRef = useRef(null);
+  const [tagOptions, setTagOptions] = useState(tagDict ?? []);
 
   useEffect(() => {
     if (inEdit && inputRef.current) {
@@ -16,18 +24,29 @@ const TagList = ({label, value, id}) => {
     }
   }, [tags]);
 
-  const handleSave = () => {
-    updateDataset(id, {
-      'id': id,
-      'tags': tags
-    }).then(() => {
-      getDatasetList();
-    });
+  useEffect(() => {
+    const filteredOptions = tagDict?.filter(item => !tags.includes(item)).sort() ?? [];
+    setTagOptions(filteredOptions);
+  }, [tags, tagDict]);
+
+  const handleSave = (newTags) => {
+    onSumbit(newTags);
+    setTags(newTags);
+    setInEdit(false);
   };
 
   const handleCreate = () => {
-    setTags([...tags, "New Tag"]);
-    setInEdit(true);
+    if (editable) {
+      setTags([...tags, "New Tag"]);
+      setInEdit(true);
+    } else {
+      setInEdit((prevState) => (!prevState));
+    }
+  };
+
+  const handleSelectChange = (e) => {
+    const selectedValue = e.target.value;
+    handleSave([...tags, selectedValue]);
   };
 
   const handleChange = (index, newVal) => {
@@ -37,8 +56,9 @@ const TagList = ({label, value, id}) => {
   };
 
   const handleClose = (index) => {
-    tags.splice(index, 1);
-    handleSave();
+    let newTags = [...tags];
+    newTags.splice(index, 1);
+    handleSave(newTags);
   };
 
   const computeWidth = (item) => {
@@ -51,9 +71,9 @@ const TagList = ({label, value, id}) => {
   };
 
   return (
-    <Box>
-      <Text fontWeight="bold" w={100} mb={1}>{label}</Text>
-      <Box lineHeight={2} mt={3} translate="no">
+    <Box display={tagStyle?.display ?? 'block'}>
+      <Text fontWeight="bold" w={'100px'} pb={3} style={{...tagStyle, color: 'black'}}>{label}</Text>
+      <Box lineHeight={2} translate="no" display={'flex'} h={'20px'}>
         {tags.map((item, index) => (
           <Tag
             size="md"
@@ -69,24 +89,38 @@ const TagList = ({label, value, id}) => {
                 placeholder={'New Tag'}
                 onEdit={() => setInEdit(false)}
                 onChange={(val) => handleChange(index, val)}
-                onBlur={handleSave}
+                onBlur={() => handleSave(tags)}
               >
-                <EditablePreview ref={index === tags.length - 1 ? inputRef : null}/>
-                <EditableInput width={computeWidth(item)}/>
+                <EditablePreview
+                  ref={index === tags.length - 1 ? inputRef : null}
+                  style={!editable ? { pointerEvents: 'none' } : undefined} />
+                <EditableInput width={computeWidth(item)} />
               </Editable>
             </TagLabel>
             <TagCloseButton onClick={() => handleClose(index)}/>
           </Tag>
         ))}
-        <Tag
-          size="md"
-          borderRadius="full"
-          variant="solid"
-          colorScheme="green"
-          onClick={handleCreate}
-        >
-          <TagLabel as={AddIcon} />
-        </Tag>
+        <Box display={'flex'} alignItems={'center'} background={'green.500'} h={'24px'} borderRadius={'1.35em'}>
+          {!editable && inEdit && <Select
+            onChange={handleSelectChange}
+            placeholder='Select option'
+            size='xs' color={'white'}
+            mt={"-2px"} fontSize={'0.875rem'}
+            borderRadius={'1.35em'}
+            borderColor={'green.500'}>
+            {tagOptions.map((item, index) => <option key={index} value={item}>{item}</option>)}
+          </Select>}
+          <Tag
+            size="md"
+            w={editable || !inEdit ? '30px' : '34px'}
+            borderRadius="full"
+            variant="solid"
+            colorScheme="green"
+            onClick={handleCreate}
+          >
+            <TagLabel as={AddIcon} />
+          </Tag>
+        </Box>
       </Box>
     </Box>
   );

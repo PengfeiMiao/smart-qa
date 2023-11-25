@@ -2,12 +2,23 @@ import React from 'react';
 import {Box, Heading} from '@chakra-ui/react';
 import NotePanel from "./NotePanel";
 import {useNavigate} from "react-router-dom";
+import TagList from "./TagList";
+import {upsertNote} from "../api/api";
 
-const NoteList = ({ notes, styles }) => {
+const NoteList = ({ notes, tagList, styles }) => {
   const navigate = useNavigate();
   const handleLinkClicked = (note) => {
     let page = Math.ceil(note.question_id / 10);
     navigate(`/question-bank/${note.dataset_id}/view/${page}?questionId=${note.question_id}`);
+  };
+
+  const handleTagSaved = async (tags, note) => {
+    await upsertNote({
+      question_id: note.question_id,
+      dataset_id: note.dataset_id,
+      id: note.id,
+      tags: tags
+    });
   };
 
   return (
@@ -21,7 +32,17 @@ const NoteList = ({ notes, styles }) => {
             </Heading>
           </Box>
           <Box p={4}>
-            <NotePanel noteInfo={note} handleLink={() => handleLinkClicked(note)} translate="no" />
+            <TagList
+              label={'Tags:'} value={note.tags}
+              editable={false}
+              tagStyle={{display: 'flex', width: '60px'}}
+              tagDict={tagList}
+              onSumbit={(tags) => handleTagSaved(tags, note)}
+            ></TagList>
+            <NotePanel
+              noteInfo={note}
+              handleLink={() => handleLinkClicked(note)}
+              translate="no" />
           </Box>
         </Box>
       ))}

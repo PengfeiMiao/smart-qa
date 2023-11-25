@@ -14,7 +14,7 @@ import {CheckIcon, CloseIcon, EditIcon, LinkIcon} from "@chakra-ui/icons";
 import remarkGfm from "remark-gfm";
 import rehypeReact from "rehype-react";
 
-const MarkdownEditor = ({input, onSubmit, onLink, translate}) => {
+const MarkdownEditor = ({input, onSubmit, onLink, linkTips, translate}) => {
   const [markdown, setMarkdown] = useState(input ?? '');
   const [inEdit, setInEdit] = useState(false);
 
@@ -48,7 +48,7 @@ const MarkdownEditor = ({input, onSubmit, onLink, translate}) => {
     ) : (
       <ButtonGroup justifyContent='left' size='sm' mt={1}>
         <IconButton icon={<EditIcon/>} {...getEditButtonProps()} />
-        <IconButton icon={<LinkIcon />} aria-label={`jump to question`} title={`jump to question`} onClick={onLink} hidden={!onLink}/>
+        <IconButton icon={<LinkIcon />} aria-label={linkTips} title={linkTips} onClick={onLink} hidden={!onLink} transition={'0.2'}/>
       </ButtonGroup>
     )
   };

@@ -20,7 +20,12 @@ const NotePanel = ({noteInfo, handleLink, translate}) => {
   };
 
   return (<Box>
-    <MarkdownEditor input={note.note} onSubmit={handleSubmit} onLink={handleLink} translate={translate}></MarkdownEditor>
+    <MarkdownEditor
+      input={note.note}
+      onSubmit={handleSubmit}
+      onLink={handleLink}
+      linkTips={`jump to question #${note.question_id}`}
+      translate={translate} />
   </Box>);
 };
 

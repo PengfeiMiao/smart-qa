@@ -15,9 +15,19 @@ import LabelValue from "../component/LabelValue";
 import {GlobalContext} from "../store/GlobalProvider";
 import TagList from "../component/TagList";
 import ToolBar from "../component/ToolBar";
+import {updateDataset} from "../api/api";
 
 const ManagerPage = () => {
-  const {datasetList} = useContext(GlobalContext);
+  const {datasetList, getDatasetList} = useContext(GlobalContext);
+
+  const handleTagSaved = (tags, dataset_id) => {
+    updateDataset(dataset_id, {
+      'id': dataset_id,
+      'tags': tags
+    }).then(() => {
+      getDatasetList();
+    });
+  }
 
   return (
     <Box h={'100vh'}>
@@ -40,7 +50,7 @@ const ManagerPage = () => {
               <LabelValue label={'CreatedAt'} value={moment(dataset.created_at).format('YYYY-MM-DD HH:mm:ss')}
                           labelStyle={{width: '100px'}}></LabelValue>
               <Divider marginY={2}/>
-              <TagList label={'Tags'} value={dataset.tags} id={dataset.id}></TagList>
+              <TagList label={'Tags'} value={dataset.tags} onSumbit={(tags) => handleTagSaved(tags, dataset.id)}></TagList>
               <Divider marginY={2}/>
               <JsonEditor label={'Prompts'} value={dataset.prompts} id={dataset.id}></JsonEditor>
             </AccordionPanel>
