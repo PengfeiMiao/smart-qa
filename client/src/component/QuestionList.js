@@ -32,6 +32,10 @@ const QuestionList = ({ questions, styles, scrollId }) => {
     }
   }, [scrollId, questions]);
 
+  const getNoteInfo = (question) => {
+    return question?.notes?.[0] ?? {note: '', tags: [], question_id: question.id, dataset_id: question.dataset_id};
+  };
+
   return (
     <Box mb={24} style={styles} ref={containerRef}>
       {questions?.map((question) => (
@@ -84,7 +88,7 @@ const QuestionList = ({ questions, styles, scrollId }) => {
                   </AccordionButton>
                 </h2>
                 <AccordionPanel pb={2}>
-                  <NotePanel noteInfo={question?.notes?.[0] ?? {note: '', tags: []}} translate="no" />
+                  <NotePanel noteInfo={getNoteInfo(question)} translate="no" />
                 </AccordionPanel>
               </AccordionItem>
             </Accordion>

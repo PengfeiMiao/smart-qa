@@ -24,7 +24,7 @@ const NoteList = ({ notes, tagList, styles }) => {
   return (
     <Box style={styles}>
       {notes?.map((note, index) => (
-        <Box key={index + 1} mt={4} marginX={8} border="0 solid white" borderRadius="md"
+        <Box key={index + 1} mt={4} marginX={8} borderColor="white" borderRadius="md"
              boxShadow="0 2px 4px rgba(0, 0, 0, 0.2)" fontFamily="sans-serif">
           <Box bgColor={"gray.300"} p={2} borderTopRadius="md">
             <Heading size='sm'>

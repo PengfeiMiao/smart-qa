@@ -6,52 +6,63 @@ import NoteList from "../component/NoteList";
 import SimpleScroll from "../component/SimpleScroll";
 import {GlobalContext} from "../store/GlobalProvider";
 import {useParams} from "react-router-dom";
+import NoteFilter from "../component/NoteFilter";
+
+const initialPage = {
+  data: [],
+  page: 1,
+  size: 10,
+  total: 0
+};
 
 const NotePage = () => {
   const {datasetList} = useContext(GlobalContext);
-  const { dataset } = useParams();
-  const [notePage, setNotePage] = useState({
-    data: [],
-    page: 1,
-    size: 10,
-    total: 0
-  });
+  const {dataset} = useParams();
+
+  const [notePage, setNotePage] = useState(initialPage);
   const [currentPage, setCurrentPage] = useState(1);
   const [datasetId, setDatasetId] = useState(parseInt(dataset, 10) || 1);
   const [tagList, setTagList] = useState([]);
+  const [searchParams, setSearchParams] = useState({});
 
   const getNoteList = async () => {
-    let body = await searchNotes({}, currentPage);
+    let body = await searchNotes(searchParams, currentPage);
     setNotePage((prevPage) => ({
       ...body, data: prevPage.data.concat(body.data)
     }));
+  };
+
+  const handleNext = () => setCurrentPage((prevPage) => (prevPage + 1));
+
+  const handleSearch = (payload) => {
+    setNotePage(initialPage);
+    setCurrentPage(1);
+    setSearchParams(payload);
   };
 
   useEffect(() => {
     if (currentPage > 0) {
       getNoteList().then();
     }
-  }, [currentPage]);
+  }, [currentPage, searchParams]);
 
   useEffect(() => {
     let tags = datasetList.find(dataset => dataset.id === datasetId)?.tags;
     setTagList(tags ?? []);
   }, [datasetList]);
 
-  const handleNext = () => setCurrentPage((prevPage) => (prevPage + 1));
-
   return (
     <Box h={'100vh'}>
-      <ToolBar />
+      <ToolBar/>
+      <NoteFilter tagList={tagList} onSearch={(payload) => handleSearch(payload)}/>
       <SimpleScroll
         handleNext={handleNext}
         currentPage={currentPage}
         hasMore={currentPage * notePage.size < notePage.total}
         loader={
-          <Spinner color='blue.300' size="xs" />
+          <Spinner color='blue.300' size="xs"/>
         }
       >
-        <Text fontSize="xl" fontWeight="bold" ml={8}>Note List</Text>
         <NoteList notes={notePage.data} tagList={tagList}></NoteList>
       </SimpleScroll>
     </Box>

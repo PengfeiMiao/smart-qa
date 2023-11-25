@@ -36,7 +36,6 @@ const QuesBankPage = () => {
   return (
     <Box h={'100vh'}>
       <ToolBar/>
-      <Text fontSize="xl" fontWeight="bold" ml={8}>Question List</Text>
       <QuestionList styles={{paddingBottom: '100px'}} questions={questionList} scrollId={currentQuestionId} />
       <Pagination
         currentPage={currentPage}
