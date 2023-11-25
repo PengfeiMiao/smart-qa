@@ -18,7 +18,8 @@ import NotePanel from "./NotePanel";
 const QuestionList = ({ questions, styles, scrollId }) => {
   const textStyle = {
     color: '#4e4e4e',
-    fontSize: '16.75px'
+    fontSize: '16.75px',
+    whiteSpace: 'pre-line'
   };
   const containerRef = useRef(null);
 
