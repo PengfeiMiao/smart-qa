@@ -6,6 +6,12 @@ import {GlobalContext} from "../store/GlobalProvider";
 const ToolBar = () => {
   const {currentPosition} = useContext(GlobalContext);
   const location = useLocation();
+  const titleStyle = {
+    maxWidth: '25vw',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    fontWeight: 'bold'
+  };
 
   const getActiveTabIndex = (path) => {
     if (path.startsWith('/question-bank')) {
@@ -23,13 +29,13 @@ const ToolBar = () => {
     <Tabs defaultIndex={getActiveTabIndex(location.pathname)}>
       <TabList position={'fixed'} w={'100%'} top={0} left={0} background={'white'} zIndex={1000}>
         <Link to={`/question-bank/${currentPosition.datasetId}/view/${currentPosition.page}`}>
-          <Tab fontWeight={'bold'}>Question Bank</Tab>
+          <Tab><p style={titleStyle}>Question Bank</p></Tab>
         </Link>
         <Link to={`/note-bank/${currentPosition.datasetId}/view`}>
-          <Tab fontWeight={'bold'}>Note Bank</Tab>
+          <Tab><p style={titleStyle}>Note Bank</p></Tab>
         </Link>
         <Link to={'/management'}>
-          <Tab fontWeight={'bold'}>Management</Tab>
+          <Tab><p style={titleStyle}>Management</p></Tab>
         </Link>
       </TabList>
     </Tabs>

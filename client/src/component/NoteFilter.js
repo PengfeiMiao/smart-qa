@@ -16,7 +16,7 @@ const NoteFilter = ({tagList, onSearch}) => {
     });
   };
 
-  return (<Box pt={4} paddingX={8} bgColor={'white'} boxShadow="sm">
+  return (<Box padding={'12px 32px 2px 32px'} bgColor={'white'} boxShadow="sm">
     <Box display="flex" marginBottom={'10px'}>
       <Input placeholder='Keyword Search' w={'50vw'} mr={'10px'}
              value={keyword} onChange={(e) => setKeyword(e.target.value)}

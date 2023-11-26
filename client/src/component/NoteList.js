@@ -5,7 +5,7 @@ import {useNavigate} from "react-router-dom";
 import TagList from "./TagList";
 import {upsertNote} from "../api/api";
 
-const NoteList = ({ notes, tagList, styles }) => {
+const NoteList = ({notes, tagList, styles}) => {
   const navigate = useNavigate();
   const handleLinkClicked = (note) => {
     let page = Math.ceil(note.question_id / 10);
@@ -37,12 +37,11 @@ const NoteList = ({ notes, tagList, styles }) => {
               editable={false}
               tagStyle={{display: 'flex', width: '60px'}}
               tagDict={tagList}
-              onSumbit={(tags) => handleTagSaved(tags, note)}
-            ></TagList>
+              onSumbit={(tags) => handleTagSaved(tags, note)}/>
             <NotePanel
               noteInfo={note}
               handleLink={() => handleLinkClicked(note)}
-              translate="no" />
+              translate="no"/>
           </Box>
         </Box>
       ))}

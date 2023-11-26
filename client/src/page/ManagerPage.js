@@ -44,14 +44,18 @@ const ManagerPage = () => {
               </AccordionButton>
             </h2>
             <AccordionPanel pb={2}>
-              <LabelValue label={'Total'} value={dataset.total} labelStyle={{width: '100px'}}></LabelValue>
+              <LabelValue label={'Total'} value={dataset.total} labelStyle={{width: '100px'}}/>
               <Divider marginY={2}/>
               <LabelValue label={'CreatedAt'} value={moment(dataset.created_at).format('YYYY-MM-DD HH:mm:ss')}
-                          labelStyle={{width: '100px'}}></LabelValue>
+                          labelStyle={{width: '100px'}}/>
               <Divider marginY={2}/>
-              <TagList label={'Tags'} value={dataset.tags} onSumbit={(tags) => handleTagSaved(tags, dataset.id)}></TagList>
+              <TagList
+                tagStyle={{marginBottom: '10px'}}
+                label={'Tags'}
+                value={dataset.tags}
+                onSumbit={(tags) => handleTagSaved(tags, dataset.id)}/>
               <Divider marginY={2}/>
-              <JsonEditor label={'Prompts'} value={dataset.prompts} id={dataset.id}></JsonEditor>
+              <JsonEditor label={'Prompts'} value={dataset.prompts} id={dataset.id}/>
             </AccordionPanel>
           </AccordionItem>
         ))}
