@@ -30,6 +30,7 @@ const SimpleScroll = (props) => {
           return;
         }
         preHeight = scrollingElement.scrollHeight;
+        console.log(scrollingElement.scrollTop + scrollingElement.clientHeight, scrollingElement.scrollHeight);
         if (
           scrollingElement.scrollTop + scrollingElement.clientHeight + (props?.moreHeight ?? 0)
           >= scrollingElement.scrollHeight - 1
