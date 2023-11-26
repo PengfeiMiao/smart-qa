@@ -1,13 +1,26 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {Box} from "@chakra-ui/react";
 import _ from 'lodash';
+import moment from "moment";
 
 const firstPage = 1;
 let preHeight = 0;
+let nextScrollTop = 0;
+let preScrollTop = 0;
+let preLoaderTop = 0;
+let maxScrollTop = 0;
+let maxCounter = 0;
+let slideCounter = 0;
+let slideTime = moment().valueOf();
 
 const SimpleScroll = (props) => {
   const [parentNode, setParentNode] = useState();
   const ref = useRef(null);
+  const loaderRef = useRef(null);
+
+  const handleScrollToBottom = _.throttle(() => {
+    props.handleNext();
+  }, 3000);
 
   useEffect(() => {
     const node = props?.scrollableTarget ?? (ref.current?.parentNode);
@@ -16,10 +29,6 @@ const SimpleScroll = (props) => {
 
   useEffect(() => {
     const scrollListener = (e) => {
-      const handleScrollToBottom = _.throttle(() => {
-        props.handleNext();
-      }, 300);
-
       if (e && e.target && e.target.scrollingElement) {
         const scrollingElement = e.target.scrollingElement;
         if (preHeight !== scrollingElement.scrollHeight) {
@@ -30,13 +39,40 @@ const SimpleScroll = (props) => {
           return;
         }
         preHeight = scrollingElement.scrollHeight;
-        console.log(scrollingElement.scrollTop + scrollingElement.clientHeight, scrollingElement.scrollHeight);
+
+        // 根据 loader与scroll的相对位置 预测下一次翻页位置
+        const scrollTop = scrollingElement.scrollTop;
+        const loaderTop = loaderRef.current.getBoundingClientRect().top;
+        if (nextScrollTop === 0 && props.currentPage === firstPage) {
+          nextScrollTop = loaderTop + scrollTop - scrollingElement.clientHeight + props?.moreHeight ?? 0;
+        }
+        if (loaderTop - preLoaderTop > 1000 && props.currentPage !== firstPage) {
+          nextScrollTop = loaderTop - preLoaderTop + scrollTop;
+        }
+        // 根据 持续滚动的行为 触发下一次翻页
+        slideCounter = scrollTop > preScrollTop ? slideCounter + scrollTop - preScrollTop : 0;
+        if (slideCounter === 0) {
+          slideTime = moment().valueOf();
+        }
+        // 根据到达 当前最大值的次数 触发下一次翻页
+        if (maxScrollTop === scrollTop) {
+          maxCounter++;
+        }
+        if (maxScrollTop < scrollTop) {
+          maxScrollTop = scrollTop;
+        }
         if (
-          scrollingElement.scrollTop + scrollingElement.clientHeight + (props?.moreHeight ?? 0)
-          >= scrollingElement.scrollHeight - 1
+          (scrollTop + scrollingElement.clientHeight >= scrollingElement.scrollHeight - 1)
+          || scrollTop > nextScrollTop
+          || (maxCounter > 0 && scrollTop > nextScrollTop - 1000 && moment().valueOf() - slideTime > 50
+             && Math.floor(slideCounter / ((moment().valueOf() - slideTime) || 1) * 10) > 3)
         ) {
           handleScrollToBottom();
+          slideCounter = 0;
+          maxCounter = 0;
         }
+        preLoaderTop = loaderTop;
+        preScrollTop = scrollTop;
       }
     };
     if (parentNode && props.currentPage === firstPage) {
@@ -53,7 +89,7 @@ const SimpleScroll = (props) => {
   return (
     <Box ref={ref} pb={'20px'}>
       {props.children}
-      {props.hasMore && props.loader}
+      {props.hasMore && <Box ref={loaderRef}>{props.loader}</Box>}
     </Box>
   );
 };

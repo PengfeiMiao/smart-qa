@@ -58,6 +58,7 @@ const NotePage = () => {
       <SimpleScroll
         handleNext={handleNext}
         currentPage={currentPage}
+        moreHeight={45}
         hasMore={currentPage * notePage.size < notePage.total}
         loader={
           <Spinner color='blue.300' size="xs"/>
