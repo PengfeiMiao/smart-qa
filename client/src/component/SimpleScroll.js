@@ -42,7 +42,7 @@ const SimpleScroll = (props) => {
 
         // 根据 loader与scroll的相对位置 预测下一次翻页位置
         const scrollTop = scrollingElement.scrollTop;
-        const loaderTop = loaderRef.current.getBoundingClientRect().top;
+        const loaderTop = loaderRef?.current?.getBoundingClientRect().top ?? 0;
         if (nextScrollTop === 0 && props.currentPage === firstPage) {
           nextScrollTop = loaderTop + scrollTop - scrollingElement.clientHeight + props?.moreHeight ?? 0;
         }

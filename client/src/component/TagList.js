@@ -73,16 +73,19 @@ const TagList = ({label, value, onSumbit, tagStyle, tagDict, editable=true}) => 
   return (
     <Box display={tagStyle?.display ?? 'block'} marginBottom={'10px'}>
       <Text fontWeight="bold" w={'100px'} style={{...tagStyle, color: 'black'}}>{label}</Text>
-      <Box translate="no" display={'flex'} flexWrap={'wrap'} rowGap={'5px'}>
+      <Box translate="no" display={'flex'} flexWrap={'wrap'} rowGap={'5px'} maxW={'90vw'}>
         {tags.map((item, index) => (
           <Tag
             key={index}
             size="md"
             maxH={'20px'}
+            maxW={'90%'}
             mr={2}
             borderRadius="full"
             variant="solid"
             colorScheme="green"
+            whiteSpace="nowrap"
+            overflow="hidden"
           >
             <TagLabel>
               <Editable
