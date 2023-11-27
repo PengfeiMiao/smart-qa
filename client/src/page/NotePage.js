@@ -51,7 +51,7 @@ const NotePage = () => {
   }, []);
 
   useEffect(() => {
-    let tags = datasetList.find(dataset => dataset.id === datasetId)?.tags;
+    let tags = datasetList?.find(dataset => dataset.id === datasetId)?.tags;
     setTagList(tags ?? []);
   }, [datasetList]);
 
