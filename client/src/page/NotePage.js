@@ -25,26 +25,30 @@ const NotePage = () => {
   const [tagList, setTagList] = useState([]);
   const [searchParams, setSearchParams] = useState({});
 
-  const getNoteList = async () => {
-    let body = await searchNotes(searchParams, currentPage);
+  const getNoteList = async (page, params) => {
+    let body = await searchNotes(params || searchParams, page || currentPage);
     setNotePage((prevPage) => ({
       ...body, data: prevPage.data.concat(body.data)
     }));
   };
 
-  const handleNext = () => setCurrentPage((prevPage) => (prevPage + 1));
+  const handleNext = () => {
+    getNoteList(currentPage + 1).then(() => {
+      setCurrentPage((prevPage) => (prevPage + 1));
+    })
+  };
 
   const handleSearch = (payload) => {
     setNotePage(initialPage);
     setCurrentPage(1);
     setSearchParams(payload);
+    getNoteList(1, payload).then();
   };
 
+
   useEffect(() => {
-    if (currentPage > 0) {
-      getNoteList().then();
-    }
-  }, [currentPage, searchParams]);
+    getNoteList().then();
+  }, []);
 
   useEffect(() => {
     let tags = datasetList.find(dataset => dataset.id === datasetId)?.tags;

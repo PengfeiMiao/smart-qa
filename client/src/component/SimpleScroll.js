@@ -64,7 +64,7 @@ const SimpleScroll = (props) => {
         if (
           (scrollTop + scrollingElement.clientHeight >= scrollingElement.scrollHeight - 1)
           || scrollTop > nextScrollTop
-          || (maxCounter > 0 && scrollTop > nextScrollTop - 1000 && moment().valueOf() - slideTime > 50
+          || (maxCounter > 0 && scrollTop > nextScrollTop - 1000 && moment().valueOf() - slideTime > 30
              && Math.floor(slideCounter / ((moment().valueOf() - slideTime) || 1) * 10) > 3)
         ) {
           handleScrollToBottom();
