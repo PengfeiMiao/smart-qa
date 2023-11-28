@@ -3,16 +3,16 @@ import {
   Editable,
   EditableInput,
   EditablePreview,
-  Select,
   Tag,
   TagCloseButton,
   TagLabel,
   Text
 } from "@chakra-ui/react";
+import { Select } from 'antd';
 import {AddIcon} from "@chakra-ui/icons";
 import React, {useEffect, useRef, useState} from "react";
 
-const TagList = ({label, value, onSumbit, tagStyle, tagDict, editable=true}) => {
+const TagList = ({label, value, onSumbit, tagStyle, tagDict, editable = true}) => {
   const inputRef = useRef(null);
   const [tags, setTags] = useState(value ?? []);
   const [inEdit, setInEdit] = useState(false);
@@ -44,9 +44,8 @@ const TagList = ({label, value, onSumbit, tagStyle, tagDict, editable=true}) => 
     }
   };
 
-  const handleSelectChange = (e) => {
-    const selectedValue = e.target.value;
-    handleSave([...tags, selectedValue]);
+  const handleSelectChange = (option) => {
+    handleSave([...tags, option]);
   };
 
   const handleChange = (index, newVal) => {
@@ -66,8 +65,7 @@ const TagList = ({label, value, onSumbit, tagStyle, tagDict, editable=true}) => 
     const canvas = document.createElement("canvas");
     const context = canvas.getContext("2d");
     context.font = "inherit";
-    const textWidth = context.measureText(inputText).width;
-    return `${textWidth * 1.5 + 10}px`;
+    return context.measureText(inputText).width;
   };
 
   return (
@@ -97,23 +95,27 @@ const TagList = ({label, value, onSumbit, tagStyle, tagDict, editable=true}) => 
               >
                 <EditablePreview
                   ref={index === tags.length - 1 ? inputRef : null}
-                  style={!editable ? { pointerEvents: 'none' } : undefined} />
-                <EditableInput width={computeWidth(item)} />
+                  style={!editable ? {pointerEvents: 'none'} : undefined}/>
+                <EditableInput width={`${computeWidth(item) * 1.5 + 10}px`}/>
               </Editable>
             </TagLabel>
             <TagCloseButton onClick={() => handleClose(index)}/>
           </Tag>
         ))}
         <Box display={'flex'} alignItems={'center'} background={'green.500'} h={'24px'} borderRadius={'1.35em'}>
-          {!editable && inEdit && <Select
-            onChange={handleSelectChange}
-            placeholder='Select option'
-            size='xs' color={'white'}
-            mt={"-2px"} fontSize={'0.875rem'}
-            borderRadius={'1.35em'}
-            borderColor={'green.500'}>
-            {tagOptions.map((item, index) => <option key={index} value={item}>{item}</option>)}
-          </Select>}
+          {!editable && inEdit &&
+            <Select
+              showSearch
+              bordered={false}
+              dropdownStyle={{width: '200px'}}
+              placeholder="Select option"
+              optionFilterProp="children"
+              onChange={handleSelectChange}
+              onSearch={() => {}}
+              filterOption={(input, option) => (option?.label ?? '').toLowerCase().includes(input.toLowerCase())}
+              options={tagOptions.map((item) => ({label: item, value: item}))}>
+            </Select>
+          }
           <Tag
             size="md"
             w={editable || !inEdit ? '30px' : '34px'}
@@ -122,7 +124,7 @@ const TagList = ({label, value, onSumbit, tagStyle, tagDict, editable=true}) => 
             colorScheme="green"
             onClick={handleCreate}
           >
-            <TagLabel as={AddIcon} />
+            <TagLabel as={AddIcon}/>
           </Tag>
         </Box>
       </Box>
