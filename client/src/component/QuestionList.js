@@ -37,7 +37,7 @@ const QuestionList = ({ questions, styles, scrollId }) => {
   };
 
   return (
-    <Box mb={24} style={styles} ref={containerRef}>
+    <Box mb={24} style={styles} ref={containerRef} background={'#F9F9F9'}>
       {questions?.map((question) => (
         <Box id={`Ques-${question.id}`} key={question.id} mt={4} marginX={8} border="1px solid gray" borderRadius="md"
              boxShadow="0 2px 4px rgba(0, 0, 0, 0.2)" fontFamily="sans-serif">
