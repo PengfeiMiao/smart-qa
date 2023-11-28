@@ -17,10 +17,11 @@ const SimpleScroll = (props) => {
   const [parentNode, setParentNode] = useState();
   const ref = useRef(null);
   const loaderRef = useRef(null);
+  const cacheHistories = [];
 
   const handleScrollToBottom = _.throttle(() => {
     props.handleNext();
-  }, 3000);
+  }, 1000);
 
   useEffect(() => {
     const node = props?.scrollableTarget ?? (ref.current?.parentNode);
@@ -61,12 +62,18 @@ const SimpleScroll = (props) => {
         if (maxScrollTop < scrollTop) {
           maxScrollTop = scrollTop;
         }
+        // 已访问页过滤
         if (
-          (scrollTop + scrollingElement.clientHeight >= scrollingElement.scrollHeight - 1)
-          || scrollTop > nextScrollTop
-          || (maxCounter > 0 && scrollTop > nextScrollTop - 1000 && moment().valueOf() - slideTime > 30
-             && Math.floor(slideCounter / ((moment().valueOf() - slideTime) || 1) * 10) > 3)
+          !cacheHistories.includes(props.currentPage + 1) &&
+          (
+            (scrollTop + scrollingElement.clientHeight >= scrollingElement.scrollHeight - 1)
+            || scrollTop > nextScrollTop
+            || (maxCounter > 0 && scrollTop > nextScrollTop - 1000 && moment().valueOf() - slideTime > 30
+               && Math.floor(slideCounter / ((moment().valueOf() - slideTime) || 1) * 10) > 3)
+          )
         ) {
+          cacheHistories.push(props.currentPage + 1);
+          // 未访问页节流
           handleScrollToBottom();
           slideCounter = 0;
           maxCounter = 0;
@@ -82,14 +89,22 @@ const SimpleScroll = (props) => {
       window.addEventListener('scroll', scrollListener);
       return () => {
         window.removeEventListener('scroll', scrollListener);
+        console.log(cacheHistories);
       };
     }
   }, [parentNode, props?.scrollableTarget, props.currentPage, props.hasMore]);
 
   return (
-    <Box ref={ref} pb={'20px'}>
+    <Box ref={ref} pb={'20px'} width={'100%'}>
       {props.children}
-      {props.hasMore && <Box ref={loaderRef}>{props.loader}</Box>}
+      {props.hasMore &&
+        <Box ref={loaderRef}
+             display={'flex'}
+             mt={'20px'}
+             alignItems={'center'}
+             justifyContent={'center'}
+        >{props.loader}</Box>
+      }
     </Box>
   );
 };

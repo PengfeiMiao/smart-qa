@@ -32,11 +32,7 @@ const NotePage = () => {
     }));
   };
 
-  const handleNext = () => {
-    getNoteList(currentPage + 1).then(() => {
-      setCurrentPage((prevPage) => (prevPage + 1));
-    })
-  };
+  const handleNext = () => setCurrentPage((prevPage) => (prevPage + 1));
 
   const handleSearch = (payload) => {
     setNotePage(initialPage);
@@ -45,10 +41,9 @@ const NotePage = () => {
     getNoteList(1, payload).then();
   };
 
-
   useEffect(() => {
     getNoteList().then();
-  }, []);
+  }, [currentPage]);
 
   useEffect(() => {
     let tags = datasetList?.find(dataset => dataset.id === datasetId)?.tags;
@@ -65,7 +60,7 @@ const NotePage = () => {
         moreHeight={45}
         hasMore={currentPage * notePage.size < notePage.total}
         loader={
-          <Spinner color='blue.300' size="xs"/>
+          <Spinner color='blue.300' size="sm"/>
         }
       >
         <NoteList notes={notePage.data} tagList={tagList}></NoteList>
