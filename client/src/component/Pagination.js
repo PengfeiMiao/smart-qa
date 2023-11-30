@@ -1,16 +1,7 @@
 import React from 'react';
 import {Box, Button} from '@chakra-ui/react';
-import {useNavigate} from "react-router-dom";
 
-function Pagination({currentPage, totalPages, onPageChange, onRoute}) {
-  const navigate = useNavigate();
-
-  const handlePathChange = (page) => {
-    const newPath = onRoute(page);
-    navigate(newPath, {replace: true});
-    scrollToTop();
-  };
-
+function Pagination({currentPage, totalPages, onPageChange}) {
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
@@ -20,12 +11,12 @@ function Pagination({currentPage, totalPages, onPageChange, onRoute}) {
 
   const handlePreviousPage = () => {
     onPageChange(currentPage - 1);
-    handlePathChange(currentPage - 1);
+    scrollToTop();
   };
 
   const handleNextPage = () => {
     onPageChange(currentPage + 1);
-    handlePathChange(currentPage + 1);
+    scrollToTop();
   };
 
   return (

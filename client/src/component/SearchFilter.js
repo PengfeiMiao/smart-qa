@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
 import {Box, Button, Input} from "@chakra-ui/react";
 
-const SearchFilter = ({onSearch, children}) => {
-  const [keyword, setKeyword] = useState('');
+const SearchFilter = ({onSearch, defaultValue, children}) => {
+  const [keyword, setKeyword] = useState(defaultValue ?? '');
 
   const handleSearch = () => {
     onSearch(keyword);
