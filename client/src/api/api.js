@@ -3,8 +3,8 @@ import {getCookie} from "../store/CacheStore";
 // const BASE_URL = 'http://localhost:8000';
 const BASE_URL = '/api';
 
-export const getQuestions = async (datasetId, currentPage) => {
-  return await fetchApi(`${BASE_URL}/datasets/${datasetId}/questions?page=${currentPage}`);
+export const getQuestions = async (datasetId, currentPage, keyword) => {
+  return await fetchApi(`${BASE_URL}/datasets/${datasetId}/questions?page=${currentPage}&question_like=${keyword}`);
 };
 
 export const analyzeQuestion = (datasetId, questionId) => {

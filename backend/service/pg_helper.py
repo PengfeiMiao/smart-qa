@@ -92,6 +92,7 @@ class PgDBHelper:
                 params.extend([page_size, offset])
                 query += " LIMIT %s OFFSET %s"
 
+            print(query, params)
             self.cur.execute(query, params)
             rows = self.cur.fetchall()
             for row in rows:
@@ -105,6 +106,7 @@ class PgDBHelper:
             query = f"SELECT COUNT(*) FROM {table}"
             params, where_sql = self.build_conditions(filters, matches)
             query += where_sql
+            print(query, params)
             self.cur.execute(query, params)
             count = self.cur.fetchone()[0]
             return count
@@ -140,6 +142,7 @@ class PgDBHelper:
         self.conn.close()
         print("Database connection closed.")
 
+    # mysql 忽略大小写：sql 追加 COLLATE utf8_general_ci
     @staticmethod
     def build_conditions(filters, matches=None):
         if matches is None:
@@ -158,14 +161,19 @@ class PgDBHelper:
                         params.append(tuple(value))
                     else:
                         relation = " AND " if matches[key] is True else " OR "
-                        conditions.append("(" + relation.join([f"{key} LIKE %s"] * len(value)) + ")")
+                        conditions.append("(" + relation.join([f"{key} ILIKE %s"] * len(value)) + ")")
                         params.extend([f"%{item}%" for item in value])
                 elif value is not None:
                     if key not in matches:
                         conditions.append(f"{key} = %s")
                         params.append(value)
+                    elif len(key.split(',')) > 1:
+                        like_fields = key.split(',')
+                        relation = " AND " if matches[key] is True else " OR "
+                        conditions.append("(" + relation.join([f"{like_field} ILIKE %s" for like_field in like_fields]) + ")")
+                        params.extend([f"%{value}%"] * len(like_fields))
                     else:
-                        conditions.append(f"{key} LIKE %s")
+                        conditions.append(f"{key} ILIKE %s")
                         params.append(f"%{value}%")
             if len(conditions) > 0:
                 where_sql = " WHERE " + " AND ".join(conditions)

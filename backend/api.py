@@ -47,14 +47,18 @@ async def login(data: UserModel):
 
 
 @app.get("/datasets/{dataset_id}/questions")
-async def get_questions(dataset_id: int, page: Optional[int] = 1, size: Optional[int] = 10):
+async def get_questions(dataset_id: int, question_like: Optional[str] = '', page: Optional[int] = 1, size: Optional[int] = 10):
     if page < 1:
         page = 1
+    if not question_like:
+        question_like = None
     table = 'questions'
-    filters = {'dataset_id': dataset_id}
-    total = pgHelper.count(table, filters)
-    rows = pgHelper.get_all(table, page, size, filters)
+    filters = {'dataset_id': dataset_id, 'question,options': question_like}
+    matches = {'question,options': False}
+    total = pgHelper.count(table, filters, matches)
+    rows = pgHelper.get_all(table, page, size, filters, matches)
     # filter notes by question_ids
+    filters['question,options'] = None
     filters['question_id'] = [row[0] for row in rows]
     sub_rows = pgHelper.get_all('notes', filters=filters)
     note_dict = group_dict([Note.parse(sub_row) for sub_row in sub_rows], 'question_id')
@@ -144,7 +148,7 @@ async def upsert_note(data: NoteModel):
 
 
 @app.post("/notes/search")
-async def get_questions(query: NoteQueryModel, page: Optional[int] = 1, size: Optional[int] = 10):
+async def get_notes(query: NoteQueryModel, page: Optional[int] = 1, size: Optional[int] = 10):
     table = 'notes'
     data_dict = jsonable_encoder(query)
     filters = {'tags': data_dict['tags'], 'note': data_dict['note']}
