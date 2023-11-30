@@ -1,29 +1,29 @@
 import React, {useState} from 'react';
-import {Box, Button, Input, Text} from "@chakra-ui/react";
 import TagList from "./TagList";
+import SearchFilter from "./SearchFilter";
 
 const NoteFilter = ({tagList, onSearch}) => {
   const [tags, setTags] = useState([]);
   const [keyword, setKeyword] = useState('');
+
   const handleTagSelected = (values) => {
     setTags(values);
-    handleSearch(values);
-  };
-  const handleSearch = (newTags = tags) => {
     onSearch({
       note: keyword,
-      tags: newTags
+      tags: values
+    });
+  };
+
+  const handleSearch = (value) => {
+    setKeyword(value);
+    onSearch({
+      note: value,
+      tags: tags
     });
   };
 
   return (
-    <Box padding={'12px 32px 2px 32px'} bgColor={'white'} boxShadow="sm">
-      <Box display="flex" marginBottom={'10px'}>
-        <Input placeholder='Keyword Search' w={'50vw'} mr={'10px'}
-               value={keyword} onChange={(e) => setKeyword(e.target.value)}
-        />
-        <Button onClick={() => handleSearch()}>View</Button>
-      </Box>
+    <SearchFilter onSearch={handleSearch}>
       <TagList
         label={'Tags:'} value={tags}
         editable={false}
@@ -31,7 +31,7 @@ const NoteFilter = ({tagList, onSearch}) => {
         tagDict={tagList}
         onSumbit={(values) => handleTagSelected(values)}
       ></TagList>
-    </Box>
+    </SearchFilter>
   );
 };
 

@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Box, Spinner, Text} from '@chakra-ui/react';
+import {Box, Spinner} from '@chakra-ui/react';
 import {searchNotes} from "../api/api";
 import ToolBar from "../component/ToolBar";
 import NoteList from "../component/NoteList";

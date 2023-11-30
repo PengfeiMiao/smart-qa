@@ -47,7 +47,7 @@ const QuesBankPage = () => {
     <Box h={'100vh'}>
       <ToolBar/>
       <SearchFilter onSearch={handleSearch}/>
-      <Skeleton isLoaded={!loading}>
+      <Skeleton isLoaded={!loading} height={'100%'}>
         <QuestionList styles={{paddingBottom: '100px'}} questions={questionList} scrollId={currentQuestionId}/>
       </Skeleton>
       <Pagination
