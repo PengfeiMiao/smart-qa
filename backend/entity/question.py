@@ -32,6 +32,8 @@ class Question:
 
     @staticmethod
     def parse(row):
+        if row is None:
+            return None
         return Question(
             row[1],
             json.loads(row[2]),

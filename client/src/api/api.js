@@ -7,12 +7,16 @@ export const getQuestions = async (datasetId, currentPage, keyword) => {
   return await fetchApi(`${BASE_URL}/datasets/${datasetId}/questions?page=${currentPage}&question_like=${keyword}`);
 };
 
+export const getQuestion = async (datasetId, questionId) => {
+  return await fetchApi(`${BASE_URL}/datasets/${datasetId}/questions/${questionId}`);
+};
+
 export const analyzeQuestion = (datasetId, questionId) => {
   let token = preAuth();
   if (!token) {
     return;
   }
-  return fetch(`${BASE_URL}/datasets/${datasetId}/questions/${questionId}`, {
+  return fetch(`${BASE_URL}/datasets/${datasetId}/questions/${questionId}/analyze`, {
     headers: {
       'Authorization': `Bearer ${token}`
     }

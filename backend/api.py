@@ -1,3 +1,4 @@
+import logging
 from typing import Optional
 
 from fastapi import FastAPI, Request, status
@@ -17,6 +18,8 @@ from backend.model.user_model import UserModel
 from backend.service.openai_helper import OpenAIHelper
 from backend.service.pg_helper import PgDBHelper
 from backend.util.mapper import clear_dict, group_dict
+
+logging.basicConfig(level=logging.WARNING)
 
 app = FastAPI()
 pgHelper = PgDBHelper()
@@ -72,6 +75,16 @@ async def get_questions(dataset_id: int, question_like: Optional[str] = '', page
 
 
 @app.get("/datasets/{dataset_id}/questions/{id}")
+async def get_question(dataset_id: int, id: int):
+    question = Question.parse(pgHelper.get('questions', id))
+    if question is None:
+        return {}
+    if question.dataset_id == dataset_id:
+        logging.warning(f"question #{id} is not in dataset #{dataset_id}")
+    return question
+
+
+@app.get("/datasets/{dataset_id}/questions/{id}/analyze")
 async def analyze_question(dataset_id: int, id: int) -> StreamingResponse:
     config = pgHelper.get('datasets', dataset_id)
     prompts = Dataset.parse(config).prompts

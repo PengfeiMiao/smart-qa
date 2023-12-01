@@ -1,15 +1,32 @@
-import React from 'react';
-import {Box, Heading} from '@chakra-ui/react';
+import React, {useState} from 'react';
+import {
+  Box,
+  Button,
+  Heading,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  useDisclosure,
+} from '@chakra-ui/react'
 import NotePanel from "./NotePanel";
-import {useNavigate} from "react-router-dom";
 import TagList from "./TagList";
-import {upsertNote} from "../api/api";
+import {getQuestion, upsertNote} from "../api/api";
+import QuestionDetail from "./QuestionDetail";
 
 const NoteList = ({notes, tagList, styles}) => {
-  const navigate = useNavigate();
-  const handleLinkClicked = (note) => {
-    let page = Math.ceil(note.question_id / 10);
-    navigate(`/question-bank/${note.dataset_id}/view/${page}?questionId=${note.question_id}`);
+  const {isOpen, onOpen, onClose} = useDisclosure();
+  const [questionDisplay, setQuestionDisplay] = useState();
+
+  const handleLinkClicked = async (note) => {
+    let question = await getQuestion(note.dataset_id, note.question_id);
+    if (Object.keys(question).length > 0) {
+      setQuestionDisplay(question);
+      onOpen();
+    }
   };
 
   const handleTagSaved = async (tags, note) => {
@@ -45,6 +62,24 @@ const NoteList = ({notes, tagList, styles}) => {
           </Box>
         </Box>
       ))}
+      <Modal isOpen={isOpen} onClose={onClose} size={'3xl'}>
+        <ModalOverlay/>
+        <ModalContent>
+          <ModalHeader bgColor={'gray.300'} borderTopRadius={6} display={'flex'}>
+            Question {questionDisplay?.id}
+            <ModalCloseButton top={'auto'} right={'16px'}/>
+          </ModalHeader>
+          <ModalBody>
+            <QuestionDetail question={questionDisplay}/>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button colorScheme='blue' onClick={onClose}>
+              Confirm
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Box>
   );
 }
