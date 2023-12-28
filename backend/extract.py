@@ -20,7 +20,6 @@ openAIHelper = OpenAIHelper()
 
 
 if __name__ == "__main__":
-    # pgHelper.execute_sql('resource/db/schema.sql')
     file_path = 'resource/file/examtopics-all.pdf'
     questions = pdfHelper.load_file(file_path)
     pgHelper.clear('questions')

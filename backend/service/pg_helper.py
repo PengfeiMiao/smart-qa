@@ -1,7 +1,7 @@
+import psycopg2
 import json
 
-import psycopg2
-from ..config.config import DB_HOST, DB_PORT, DB_SCHEMA, DB_USER, DB_PWD
+from backend.config.config import DB_HOST, DB_PORT, DB_SCHEMA, DB_USER, DB_PWD
 
 
 class PgDBHelper:
@@ -23,6 +23,17 @@ class PgDBHelper:
         except psycopg2.Error as e:
             print(f"Error connecting to PostgreSQL: {e}")
 
+    def has_tables(self):
+        table_count = 0
+        try:
+            self.cur.execute('SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = \'public\'')
+            table_count = self.cur.fetchone()[0]
+            print(f"Count tables: {table_count}")
+        except psycopg2.Error as e:
+            print(f"Error counting tables: {e}")
+        finally:
+            return table_count
+
     def execute_sql(self, filename):
         # 读取 SQL 脚本文件内容
         with open(filename, 'r') as file:
@@ -35,8 +46,8 @@ class PgDBHelper:
         except psycopg2.Error as e:
             self.conn.rollback()
             print(f"Error initializing schema: {e}")
-        finally:
-            self.close()
+        # finally:
+        #     self.close()
 
     def save(self, table, data):
         try:

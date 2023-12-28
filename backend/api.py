@@ -1,4 +1,5 @@
 import logging
+import os
 from typing import Optional
 
 from fastapi import FastAPI, Request, status
@@ -169,3 +170,11 @@ async def get_notes(query: NoteQueryModel, page: Optional[int] = 1, size: Option
     total = pgHelper.count(table, filters, matches)
     rows = pgHelper.get_all(table, page, size, filters, matches)
     return Page([Note.parse(row) for row in rows], total, page, size)
+
+
+@app.get("/db/init")
+async def db_init():
+    folder = os.path.abspath(os.path.join(os.path.dirname(__file__)))
+    if pgHelper.has_tables() == 0:
+        pgHelper.execute_sql(folder + '/resource/db/schema.sql')
+    return {'status': 'ok'}
