@@ -29,19 +29,18 @@ FROM python:3.9
 # 设置工作目录
 WORKDIR /app
 
+RUN apt-get update && apt-get install lsof
+
+# 将项目文件复制到容器中
+#RUN touch .profile
+COPY . .
+
 # 从之前的构建阶段复制 Python 依赖
 COPY --from=python-builder /usr/local/lib/python3.9/site-packages /usr/local/lib/python3.9/site-packages
 
 # 从之前的构建阶段复制 Node.js 依赖
-COPY --from=node-builder /app/node_modules /app/node_modules
-
-RUN touch .profile
-
-#RUN apt-get update && apt-get install lsof
-
-# 将项目文件复制到容器中
-COPY . .
+COPY --from=node-builder /app/node_modules /app/clients/node_modules
 
 # 设置容器启动命令
-ENTRYPOINT ["/bin/bash", "-c"]
+#ENTRYPOINT ["/bin/bash", "-c", "source .profile"]
 CMD bash scripts/start.sh

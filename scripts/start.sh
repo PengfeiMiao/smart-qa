@@ -1,14 +1,20 @@
 #!/bin/bash
 
-python3 -m uvicorn backend.api:app --reload
+source .profile
+nohup python3 -m uvicorn backend.api:app --reload > /dev/null 2>&1 &
 echo "start backend"
 
 #cd client && nohup npm run prod > /dev/null 2>&1 &
 #echo "start client"
 
-#until curl -sS "http://localhost:8000/login" | grep -q "Method Not Allowed"; do
-#  sleep 1
-#  echo -n "."
-#done
-#curl -X GET -H "Authorization: Bearer $SECRET_KEY" http://localhost:8000/db/init
-#echo -e "\ninit database"
+until curl -sS "http://localhost:8000/login" | grep -q "Method Not Allowed"; do
+  sleep 1
+  echo -n "."
+done
+curl -X GET -H "Authorization: Bearer $SECRET_KEY" http://localhost:8000/db/init
+echo -e "\ninit database"
+
+until curl -sS "http://localhost:8000/login" | grep -q "Method Not Allowed"; do
+  sleep 3600
+  echo "Ping for Health"
+done
