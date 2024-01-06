@@ -36,4 +36,5 @@ cd client
 npm install
 npm run dev
 ```
-which also can be executed conveniently in scripts folder
+7. or you can skip all steps below, just depends on docker engine and execute:
+`bash scripts/setup.sh`

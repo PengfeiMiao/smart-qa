@@ -15,8 +15,8 @@ COPY . .
 RUN pip install --no-cache-dir -r backend/requirements.txt
 
 # 安装 Node.js 依赖
+#RUN npm config set registry https://registry.npm.taobao.org/
 RUN cd client && npm install && cd ..
 
 # 设置容器启动命令
-#ENTRYPOINT ["/bin/bash", "-c", "source .profile"]
 CMD bash scripts/start.sh
